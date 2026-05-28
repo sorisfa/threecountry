@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>삼국지 땅따먹기 : 영웅의 도래 ver 9.89</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght=500;800;900&display=swap');
 
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { 
@@ -60,7 +60,7 @@ html,body {
   border-color: #ff9999;
 }
 
-/* ① 초기 타이틀 (요구사항: 깔끔한 하단 이동 및 아이콘 배제) */
+/* ① 초기 타이틀 */
 #s-title {
   background:url('image/초기화면.png') center/cover no-repeat;
   flex-direction:column; align-items:center; justify-content:flex-end;
@@ -108,24 +108,24 @@ html,body {
 .map-name { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 6px; }
 .map-desc { font-size: 13px; color: #ccc; text-align: center; line-height: 1.4; word-break: keep-all; }
 
-/* ② 나라 선택 */
+/* ② 나라 선택 (하단 불필요한 빈 공간 제거 및 콤팩트 상하 균형 정렬) */
 #s-sel {
   flex-direction:column; align-items:center; justify-content: center;
   background: url('image/세 왕.png') center/cover no-repeat; position: relative;
 }
 #s-sel::before {
   content: ""; position: absolute; inset: 0; 
-  background: radial-gradient(circle, rgba(5,3,0,0.5) 20%, rgba(0,0,0,0.95) 100%); z-index: 1;
+  background: radial-gradient(circle, rgba(5,3,0,0.3) 20%, rgba(0,0,0,0.92) 100%); z-index: 1;
 }
 .sel-content {
-  position: relative; z-index: 2; width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 45px; padding: 40px 20px;
+  position: relative; z-index: 2; width: 100%; max-width: 900px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 30px 20px;
 }
 .sel-title { 
-  color:#fff; font-size:38px; font-weight:900; letter-spacing:4px; 
+  color:#fff; font-size:36px; font-weight:900; letter-spacing:4px; 
   text-shadow: 0 0 20px rgba(212,175,55,1), 0 3px 6px rgba(0,0,0,1); 
 }
-.k-row { display:flex; gap:35px; justify-content:center; }
+.k-row { display:flex; gap:30px; justify-content:center; width: 100%; }
 .k-card {
   width:210px; border-radius:12px; overflow:hidden; cursor:pointer;
   border:3px solid rgba(255,255,255,0.2); transition:all 0.25s;
@@ -138,7 +138,7 @@ html,body {
 }
 .k-card.on { border-color:#d4af37; box-shadow:0 0 35px rgba(212,175,55,1); transform: scale(1.06); }
 .k-card.off { opacity:0.2; cursor:not-allowed; transform: scale(0.95); }
-.sel-btn-ok { width: 300px; padding: 18px 0; font-size: 26px; }
+.sel-btn-ok { width: 300px; padding: 16px 0; font-size: 24px; margin-top: 10px; }
 
 /* ③ 대화 화면 */
 #s-dlg {
@@ -281,7 +281,7 @@ html,body {
 </head>
 <body>
 
-<!-- ① 초기 타이틀 화면 (ver 9.89 마킹화 및 완벽 하단이동 정돈) -->
+<!-- ① 초기 타이틀 화면 -->
 <div id="s-title" class="screen active">
   <div class="t-wrap">
     <button class="g-btn t-btn-main" onclick="btnSfx();goSelect()">천하통일 시작</button>
@@ -347,7 +347,7 @@ html,body {
   </div>
 </div>
 
-<!-- ② 나라 선택 화면 -->
+<!-- ② 나라 선택 화면 (불필요한 아래쪽 검은 공간 전면 압축 완료) -->
 <div id="s-sel" class="screen">
   <div class="sel-content">
     <div class="sel-title">⚔️ 격돌할 두 황조를 선택하라</div>
@@ -457,7 +457,7 @@ const KD = {
     img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
     wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
           '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'],
-    drawSpeech: '고구려의 철기군과 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
+    drawSpeech: '고구려의 철기군 and 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
   baekje:  { id:'baekje',   name:'백제',   king:'온조왕', desc:'해상 담로 개척 (15% 확률로 1칸 건너 원격기지 활성화)',
     img:'image/온조왕.png', color:'#145c2a', accent:'#2ecc71',
     wins:['백제의 위대함이 오늘 다시 한번 증명되었도다!',
@@ -499,9 +499,6 @@ let sel=[], k1=null, k2=null, script=[], si=0;
 let grid=[], turn=0, hi=new Set(), totalTurns=0;
 let autoInterval = null;
 let currentMapType = 'mountain'; 
-
-let bgm = { play: () => Promise.resolve(), pause: () => {} };
-let winAud = { play: () => Promise.resolve(), pause: () => {}, currentTime: 0 };
 
 function btnSfx(){
   try {
@@ -660,12 +657,10 @@ function initGame(){
   drawUI();
 }
 
-/* 🎯 [핵심 알고리즘 수정] 신라 패시브를 10의 배수 턴 궁극기 형태로 고도화 조율 */
 function calculateHighlights(kid){
   const s = new Set();
   const oppKid = (kid === k1.id ? k2.id : k1.id);
 
-  // 1. 공통 기본 진군로 탐색 (상하좌우 빈칸)
   for(let r=0; r<G; r++) {
     for(let c=0; c<G; c++) {
       if(grid[r][c] === kid) {
@@ -679,7 +674,6 @@ function calculateHighlights(kid){
     }
   }
 
-  // 특성 1. 고구려: 3의 배수 턴일 때 대각선 확장 활성화
   if(kid === 'goguryeo' && (totalTurns % 3 === 0)) {
     let triggered = false;
     for(let r=0; r<G; r++) {
@@ -698,7 +692,6 @@ function calculateHighlights(kid){
     if(triggered) setTimeout(() => triggerSkillEffect('고구려', '기사의 강습 발동! 대각선 확장 타일이 활성화되었습니다!'), 50);
   }
 
-  // 특성 2. 백제: 15% 확률 적중 시 원격 도약 통로 활성화
   if(kid === 'baekje' && Math.random() < 0.15) {
     let triggered = false;
     for(let r=0; r<G; r++) {
@@ -717,7 +710,6 @@ function calculateHighlights(kid){
     if(triggered) setTimeout(() => triggerSkillEffect('백제', '해상 담로 개척 발동! 원격 도약 타일이 활성화되었습니다!'), 50);
   }
 
-  // 특성 3. 신라 (화랑의 풍월도): ★오직 10의 배수 턴(10, 20, 30...)에만 인접한 적의 돌 강탈 스킬 활성화★
   if(kid === 'silla' && (totalTurns % 10 === 0)) {
     let triggered = false;
     for(let r=0; r<G; r++) {
@@ -726,7 +718,7 @@ function calculateHighlights(kid){
           DIRS.forEach(([dr,dc]) => {
             const nr = r + dr, nc = c + dc;
             if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === oppKid) {
-              s.add(`${nr},${nc}`); // 적 영토 좌표를 강제로 하이라이트에 특수 주입
+              s.add(`${nr},${nc}`);
               triggered = true;
             }
           });
@@ -757,7 +749,6 @@ function drawGrid(){
     } else if(kid){
       const kd=KD[kid];
       d.style.cssText=`background:${kd.color};border:2px solid ${kd.accent}aa;`;
-      // 만약 신라 특성 타이밍에 하이라이트된 적의 돌이라면, 강력한 크로스헤어 포섭 이펙트 부여
       if(isHi) {
         d.classList.add('hi');
         d.style.boxShadow=`0 0 25px #fff, inset 0 0 14px #ff0000`;
