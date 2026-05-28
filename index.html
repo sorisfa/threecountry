@@ -60,9 +60,9 @@ html,body {
   border-color: #ff9999;
 }
 
-/* 타이틀 화면 (배경화면 이미지 지정) */
+/* 타이틀 화면 (image/ 폴더 내부 초기화면.png 지정) */
 #s-title {
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('초기화면.png') no-repeat center center;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('image/초기화면.png') no-repeat center center;
   background-size: cover;
   flex-direction:column; align-items:center; justify-content:center; gap:30px;
 }
@@ -197,7 +197,7 @@ html,body {
       <button class="g-btn t-btn-sub" onclick="btnSfx();openSkillModal()">국가 특성</button>
       <button class="g-btn t-btn-sub" onclick="btnSfx();openMapModal()">전장 선택</button>
     </div>
-    <div class="v-text">ver 9.88 (신라 밸런스 조정 및 자산 복구 버전)</div>
+    <div class="v-text">ver 9.88 (신라 밸런스 조정 및 image/ 폴더 경로 지정 버전)</div>
   </div>
 </div>
 
@@ -339,10 +339,11 @@ html,body {
 </div>
 
 <script>
+/* 📁 이미지 경로를 'image/파일명' 형태로 일괄 업데이트 */
 const KD = {
-  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', img:'주몽.png', desc:'기사의 강습 (3턴마다 대각선 빈 영지 활성화)', color:'#6b1414', accent:'#e74c3c' },
-  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', img:'온조왕.png', desc:'해상 담로 개척 (15% 확률 원격 도약지 활성화)', color:'#145c2a', accent:'#2ecc71' },
-  silla:   { id:'silla',    name:'신라',   king:'박혁거세', img:'박혁거세.png', desc:'정예 화랑 출격 (10의 배수 턴에만 접경 적 돌 강탈 활성화)', color:'#1a3a8a', accent:'#60a5fa' },
+  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', img:'image/주몽.png', desc:'기사의 강습 (3턴마다 대각선 빈 영지 활성화)', color:'#6b1414', accent:'#e74c3c' },
+  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', img:'image/온조왕.png', desc:'해상 담로 개척 (15% 확률 원격 도약지 활성화)', color:'#145c2a', accent:'#2ecc71' },
+  silla:   { id:'silla',    name:'신라',   king:'박혁거세', img:'image/박혁거세.png', desc:'정예 화랑 출격 (10의 배수 턴에만 접경 적 돌 강탈 활성화)', color:'#1a3a8a', accent:'#60a5fa' },
 };
 
 const SCRIPTS = {
@@ -413,7 +414,7 @@ function confirmSel(){
   const key=[...sel].sort().join('-');
   script=SCRIPTS[key]||[]; si=0;
   
-  // 대화창에 이미지 패스 할당
+  // 대화창에 이미지 패스 정확히 연동
   document.getElementById('dlg-img-L').src = k1.img;
   document.getElementById('dlg-img-R').src = k2.img;
   
@@ -472,14 +473,12 @@ function initGame(){
   drawUI();
 }
 
-/* 🎯 10의 배수 턴 제한이 걸린 밸런싱 하이라이트 연산 엔진 */
 function calculateHighlights(kid){
   const validHi = new Set();
   const oppKid = (kid === k1.id ? k2.id : k1.id);
   let passiveTriggered = false;
   let passiveMsg = "";
 
-  // 1. 기본 상하좌우 빈칸 탐색 및 배치 활성화
   for(let r=0; r<G; r++) {
     for(let c=0; c<G; c++) {
       if(grid[r][c] === kid) {
@@ -529,7 +528,7 @@ function calculateHighlights(kid){
     if(passiveTriggered) passiveMsg = "⚡ 백제 특성 발동: 해상 담로 개척! 원격 기지 돌이 활성화되었습니다.";
   }
 
-  // 특성 3. 신라: 오직 10의 배수 턴에만 접경한 적 돌을 강탈용으로 활성화
+  // 특성 3. 신라: 오직 10의 배수 턴에만 접경한 적 돌을 강탈용으로 활성화 (정교한 밸런싱)
   if(kid === 'silla' && (totalTurns % 10 === 0)) {
     for(let r=0; r<G; r++) {
       for(let c=0; c<G; c++) {
@@ -547,7 +546,6 @@ function calculateHighlights(kid){
     if(passiveTriggered) passiveMsg = "⚡ 신라 궁극 특성 발동: 정예 화랑 출격! 접경한 적의 돌을 빼앗을 수 있습니다!";
   }
 
-  // 상단 안내 힌트 갱신
   const hintEl = document.getElementById('g-hint-text');
   if(passiveTriggered && passiveMsg !== "") {
     hintEl.innerHTML = `<span style="color:#ffeb3b;">${passiveMsg}</span>`;
@@ -580,7 +578,6 @@ function drawGrid(){
         const kd=KD[kid];
         d.style.cssText=`background:${kd.color}; border:2px solid ${kd.accent};`;
         
-        // 신라 전용 10턴 주기 강탈 타겟 이펙트 처리
         if(isHi && kid === oppKid) {
           d.classList.add('hi', 'steal-target');
           d.onclick=()=>claimCell(r,c);
