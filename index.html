@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>삼국지 땅따먹기 : 영웅의 도래</title>
+<title>삼국지 땅따먹기 : 영웅의 도래 ver 0.96</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;800;900&display=swap');
 
@@ -54,7 +54,6 @@ html,body {
   background: linear-gradient(180deg, #6e1818 0%, #3b0b0b 100%);
   border-color: #ff5555;
   color: #fff0f0;
-  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 6px #ff000044;
 }
 .g-btn.red:hover {
   background: linear-gradient(180deg, #8f2323 0%, #521111 100%);
@@ -65,28 +64,62 @@ html,body {
 #s-title {
   background:url('image/초기화면.png') center/cover no-repeat;
   flex-direction:column; align-items:center; justify-content:flex-end;
-  padding-bottom:8%;
+  padding-bottom:6%;
 }
-.t-wrap { display:flex; flex-direction:column; align-items:center; gap:20px; }
+.t-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
 .t-btn-main { width:320px; padding:22px 0; font-size:28px; }
 .t-row { display:flex; gap:20px; }
-.t-btn-sub { width:150px; padding:14px 0; font-size:18px; }
+.t-btn-sub { width:150px; padding:14px 0; font-size:17px; }
+.v-text { color: rgba(212,175,55,0.7); font-size: 15px; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
+
+/* 모달 공통 레이아웃 */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  display: none; align-items: center; justify-content: center; z-index: 100;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: linear-gradient(145deg, #1c1208, #0a0602);
+  border: 3px solid #d4af37; border-radius: 16px;
+  width: 85%; max-width: 850px; padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+  display: flex; flex-direction: column; gap: 25px; position: relative;
+}
+.modal-head { font-size: 30px; font-weight: 900; color: #d4af37; text-align: center; letter-spacing: 2px; }
+.modal-body { display: flex; gap: 20px; justify-content: center; }
+.modal-close { width: 180px; padding: 12px 0; font-size: 18px; align-self: center; }
+
+/* 특성 설명 전용 카드 */
+.info-card {
+  flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 10px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.info-card img { width: 100%; height: 160px; object-fit: contain; margin-bottom: 12px; border-bottom: 1px solid rgba(212,175,55,0.2); }
+.info-name { font-size: 19px; font-weight: 900; margin-bottom: 5px; }
+.info-skill { font-size: 15px; color: #ffeb3b; font-weight: 800; margin-bottom: 8px; }
+.info-desc { font-size: 13px; color: #e5dec9; line-height: 1.5; word-break: keep-all; }
+
+/* 맵 선택 카드 */
+.map-card {
+  width: 220px; background: rgba(0,0,0,0.6); border: 2px solid rgba(212,175,55,0.3);
+  border-radius: 12px; padding: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: all 0.2s;
+}
+.map-card:hover { border-color: #fff; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
+.map-icon { font-size: 45px; margin-bottom: 10px; }
+.map-name { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 6px; }
+.map-desc { font-size: 13px; color: #ccc; text-align: center; line-height: 1.4; word-break: keep-all; }
 
 /* ② 나라 선택 */
 #s-sel {
   flex-direction:column; align-items:center; justify-content: center;
-  background: url('image/세 왕.png') center/cover no-repeat;
-  position: relative;
+  background: url('image/세 왕.png') center/cover no-repeat; position: relative;
 }
 #s-sel::before {
   content: ""; position: absolute; inset: 0; 
-  background: radial-gradient(circle, rgba(5,3,0,0.5) 20%, rgba(0,0,0,0.95) 100%);
-  z-index: 1;
+  background: radial-gradient(circle, rgba(5,3,0,0.5) 20%, rgba(0,0,0,0.95) 100%); z-index: 1;
 }
 .sel-content {
   position: relative; z-index: 2; width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 45px;
-  padding: 40px 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 45px; padding: 40px 20px;
 }
 .sel-title { 
   color:#fff; font-size:38px; font-weight:900; letter-spacing:4px; 
@@ -101,8 +134,7 @@ html,body {
 .k-card img { width:100%; height:250px; object-fit:cover; display:block; }
 .k-card .kn {
   color:#fff; text-align:center; font-size:22px; font-weight:800; 
-  padding:14px 4px; background:rgba(22,14,5,0.92);
-  border-top: 2px solid rgba(212,175,55,0.3);
+  padding:14px 4px; background:rgba(22,14,5,0.92); border-top: 2px solid rgba(212,175,55,0.3);
 }
 .k-card.on { border-color:#d4af37; box-shadow:0 0 35px rgba(212,175,55,1); transform: scale(1.06); }
 .k-card.off { opacity:0.2; cursor:not-allowed; transform: scale(0.95); }
@@ -201,7 +233,7 @@ html,body {
 }
 
 .g-footer { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; flex-shrink: 0; }
-.g-hint { color:rgba(212,175,55,0.85); font-size:17px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
+.g-hint { color:rgba(212,175,55,0.85); font-size:16px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
 .g-btn-group { display: flex; gap: 18px; width: 100%; justify-content: center; }
 .g-foot-btn { padding: 12px 30px; font-size: 17px; }
 
@@ -209,35 +241,36 @@ html,body {
 #s-win {
   background: radial-gradient(circle at center, #3d2508 0%, #050300 100%);
   flex-direction: row; align-items: center; justify-content: center;
-  gap: 60px; padding: 40px 8%;
+  gap: 40px; padding: 40px 5%;
 }
-.w-left-zone { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 45%; }
+.w-left-zone { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 48%; }
+.w-img-container { display: flex; gap: 15px; justify-content: center; width: 100%; }
 .w-img {
-  width: 280px; height: 350px; object-fit: contain; border-radius: 14px;
+  width: 240px; height: 320px; object-fit: contain; border-radius: 14px;
   border: 3px solid #d4af37; box-shadow: 0 0 45px rgba(212,175,55,0.7);
   background: rgba(0,0,0,0.5); animation: popIn 0.8s ease both;
 }
 .w-speech {
-  color: #fff; font-size: 22px; font-weight: 800; text-align: center;
-  width: 100%; max-width: 460px; line-height: 1.6; font-style: italic;
-  background: rgba(18,12,6,0.95); padding: 20px 24px; border-radius: 12px; 
+  color: #fff; font-size: 20px; font-weight: 800; text-align: center;
+  width: 100%; min-height: 100px; line-height: 1.6; font-style: italic;
+  background: rgba(18,12,6,0.95); padding: 16px 22px; border-radius: 12px; 
   border: 3px solid rgba(212,175,55,0.5); box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
-  word-break: keep-all; display: flex; align-items: center; justify-content: center;
+  word-break: keep-all; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
 }
-.w-right-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 35px; width: 45%; }
-.w-trophy { font-size: 70px; animation: popIn 0.5s ease both; margin-bottom: -15px; }
+.w-right-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; width: 48%; }
+.w-trophy { font-size: 65px; animation: popIn 0.5s ease both; margin-bottom: -15px; }
 .w-title { 
-  font-size: 48px; font-weight: 900; text-align: center;
+  font-size: 44px; font-weight: 900; text-align: center;
   text-shadow: 0 0 30px currentColor, 0 3px 6px #000; letter-spacing: 2px;
   animation: popIn 0.7s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
 }
 .w-scores { 
-  display: flex; gap: 60px; background: rgba(0,0,0,0.4); 
-  padding: 20px 40px; border-radius: 14px; border: 1px solid rgba(212,175,55,0.2);
+  display: flex; gap: 50px; background: rgba(0,0,0,0.4); 
+  padding: 20px 35px; border-radius: 14px; border: 1px solid rgba(212,175,55,0.2);
 }
 .w-sc { text-align: center; }
-.w-sc-name { font-size: 24px; font-weight: 800; margin-bottom: 5px; }
-.w-sc-val { font-size: 52px; font-weight: 900; text-shadow: 0 2px 4px #000; }
+.w-sc-name { font-size: 22px; font-weight: 800; margin-bottom: 5px; }
+.w-sc-val { font-size: 48px; font-weight: 900; text-shadow: 0 2px 4px #000; }
 .reset-btn { width: 280px; padding: 18px 0; font-size: 22px; margin-top: 10px; }
 
 @keyframes popIn {
@@ -253,10 +286,64 @@ html,body {
   <div class="t-wrap">
     <button class="g-btn t-btn-main" onclick="btnSfx();goSelect()">천하통일 시작</button>
     <div class="t-row">
-      <button class="g-btn t-btn-sub" onclick="btnSfx()">환경설정</button>
-      <button class="g-btn t-btn-sub" onclick="btnSfx()">열전모드</button>
+      <button class="g-btn t-btn-sub" onclick="btnSfx();openSkillModal()">국가 특성</button>
+      <button class="g-btn t-btn-sub" onclick="btnSfx();openMapModal()">열전 모드</button>
     </div>
     <button class="g-btn t-btn-sub red" onclick="btnSfx();exitGame()">전투이탈</button>
+    <div class="v-text">ver 0.96</div>
+  </div>
+</div>
+
+<!-- [모달 1] 국가 특성 백과 도감 -->
+<div id="m-skill" class="modal-overlay" onclick="closeSkillModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">📜 삼한 영웅 고유 패시브 도감</div>
+    <div class="modal-body">
+      <div class="info-card" style="border-color:#e74c3c">
+        <img src="image/주몽.png" alt="주몽">
+        <div class="info-name" style="color:#e74c3c">고구려 (주몽)</div>
+        <div class="info-skill">기사(騎射)의 강습</div>
+        <div class="info-desc">3의 배수 턴마다 특성 발동! 기존 동서남북 사방 외에, 고구려 영토 기준 대각선 4방향의 빈 영지까지 사거리 제한 없이 하이라이트 활성화되어 저격 배치할 수 있습니다.</div>
+      </div>
+      <div class="info-card" style="border-color:#2ecc71">
+        <img src="image/온조왕.png" alt="온조왕">
+        <div class="info-name" style="color:#2ecc71">백제 (온조왕)</div>
+        <div class="info-skill">해상 담로의 개척</div>
+        <div class="info-desc">백제 턴 개시 시 15%의 확률로 기습 통로가 개척됩니다. 인접한 칸뿐만 아니라 1칸을 아예 뛰어넘어 배치 가능한 '외딴 전술 요충지'들이 격전판에 동시 활성화됩니다.</div>
+      </div>
+      <div class="info-card" style="border-color:#60a5fa">
+        <img src="image/박혁거세.png" alt="박혁거세">
+        <div class="info-name" style="color:#60a5fa">신라 (박혁거세)</div>
+        <div class="info-skill">화랑의 풍월도</div>
+        <div class="info-desc">신라 영토와 인접한 곳에 존재하는 '적 세력의 돌(영토)'을 무기로 역포섭할 수 있습니다. 해당 적의 돌이 활성화 상태로 표시되며, 클릭 시 적의 돌을 파괴하고 신라 영토로 빼앗아옵니다.</div>
+      </div>
+    </div>
+    <button class="g-btn modal-close" onclick="closeSkillModal()">도감 닫기</button>
+  </div>
+</div>
+
+<!-- [모달 2] 열전 모드 맵 선택 팝업 -->
+<div id="m-map" class="modal-overlay" onclick="closeMapModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">🗺️ 원정 전장(지형) 선택</div>
+    <div class="modal-body">
+      <div class="map-card" onclick="selectMap('mountain')">
+        <div class="map-icon">⛰️</div>
+        <div class="map-name">험준한 산맥</div>
+        <div class="map-desc">중앙 요충지에 5개의 통행 불가 바위산이 솟아납니다. 산맥을 우회하여 좁은 길목을 차지해야 합니다.</div>
+      </div>
+      <div class="map-card" onclick="selectMap('cross')">
+        <div class="map-icon">⚔️</div>
+        <div class="map-name">십자형 전장</div>
+        <div class="map-desc">네 군데 모서리 절벽 구역이 완전히 잘려나간 형태입니다. 외곽 우회가 힘들어 중앙에서 전면전이 펼쳐집니다.</div>
+      </div>
+      <div class="map-card" onclick="selectMap('wall')">
+        <div class="map-icon">🧱</div>
+        <div class="map-name">만리장성 성문</div>
+        <div class="map-desc">중앙을 거대한 성벽 격실이 가로막습니다. 오직 뚫려있는 2개의 성문 통로를 통해서만 상대 진형으로 넘어갑니다.</div>
+      </div>
+    </div>
+    <button class="g-btn modal-close" onclick="closeMapModal()">돌아가기</button>
   </div>
 </div>
 
@@ -340,7 +427,7 @@ html,body {
   </div>
   
   <div class="g-footer">
-    <div class="g-hint">빛나는 진군 경로 중 한 곳을 점령하십시오. (⛰️ 표시는 험준한 산맥입니다)</div>
+    <div class="g-hint" id="g-hint-text">빛나는 진군 경로 중 한 곳을 점령하십시오.</div>
     <div class="g-btn-group">
       <button class="g-btn g-foot-btn" id="btn-auto-play" onclick="btnSfx();startAutoPlay()">자동입력 번개배치 (0.2s)</button>
       <button class="g-btn g-foot-btn red" id="btn-early-end" onclick="btnSfx();endEarly()">반정 회군 (현재 계산 종료)</button>
@@ -348,10 +435,12 @@ html,body {
   </div>
 </div>
 
-<!-- ⑤ 승리 정산 화면 -->
+<!-- ⑤ 승리/무승부 정산 화면 -->
 <div id="s-win" class="screen">
   <div class="w-left-zone">
-    <img class="w-img" id="w-img" src="" alt="">
+    <div class="w-img-container" id="w-img-layout">
+      <img class="w-img" id="w-img-single" src="" alt="">
+    </div>
     <div class="w-speech" id="w-speech"></div>
   </div>
   <div class="w-right-zone">
@@ -362,24 +451,23 @@ html,body {
   </div>
 </div>
 
-<audio id="aud-bgm" src="audio/배경음악.mp3" loop preload="auto"></audio>
-<audio id="aud-win" src="audio/승리.mp3"     preload="auto"></audio>
-
 <script>
-/* ═══════════ 국가 스킬 고도화 세팅 ═══════════ */
 const KD = {
-  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', desc:'기사의 강습 (3턴마다 대각 확장)',
+  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', desc:'기사의 강습 (3턴마다 대각선 방향 확장 활성화)',
     img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
     wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
-          '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'] },
-  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', desc:'해상 담로 개척 (15% 확률 원격 기지)',
+          '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'],
+    drawSpeech: '고구려의 철기군과 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
+  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', desc:'해상 담로 개척 (15% 확률로 1칸 건너 원격기지 활성화)',
     img:'image/온조왕.png', color:'#145c2a', accent:'#2ecc71',
     wins:['백제의 위대함이 오늘 다시 한번 증명되었도다!',
-          '한강의 물처럼, 백제의 영토는 끝없이 넓어지리라!'] },
-  silla:   { id:'silla',    name:'신라',   king:'박혁거세', desc:'화랑의 풍월도 (15% 확률 인접 역포섭)',
+          '한강의 물처럼, 백제의 영토는 끝없이 넓어지리라!'],
+    drawSpeech: '바다를 가르는 기상으로 임했거늘, 군웅들의 투지가 참으로 대단하구려.' },
+  silla:   { id:'silla',    name:'신라',   king:'박혁거세', desc:'화랑의 풍월도 (인접한 적의 영토를 직접 강탈 활성화)',
     img:'image/박혁거세.png', color:'#1a3a8a', accent:'#60a5fa',
     wins:['하늘의 뜻이 이미 정해져 있었노라. 신라의 빛이 온 땅을 밝히리라!',
-          '나는 알에서 태어났으되, 이 땅의 진정한 왕으로 우뚝 서리라!'] },
+          '나는 알에서 태어났으되, 이 땅의 진정한 왕으로 우뚝 서리라!'],
+    drawSpeech: '하늘의 별빛이 우리를 고루 비추니, 굳이 무리하여 우열을 가릴 필요가 없겠소.' },
 };
 
 const SCRIPTS = {
@@ -405,14 +493,16 @@ const SCRIPTS = {
 
 const G=10;
 const DIRS=[[-1,0],[1,0],[0,-1],[0,1]];
-const DIAG_DIRS=[[-1,-1],[-1,1],[1,-1],[1,1]]; // 고구려 전용 대각선
+const DIAG_DIRS=[[-1,-1],[-1,1],[1,-1],[1,1]];
 
 let sel=[], k1=null, k2=null, script=[], si=0;
 let grid=[], turn=0, hi=new Set(), totalTurns=0;
 let autoInterval = null;
+let currentMapType = 'mountain'; 
 
-const bgm    = document.getElementById('aud-bgm');
-const winAud = document.getElementById('aud-win');
+// 더미 오디오 방지용 객체
+let bgm = { play: () => Promise.resolve(), pause: () => {} };
+let winAud = { play: () => Promise.resolve(), pause: () => {}, currentTime: 0 };
 
 function btnSfx(){
   try {
@@ -434,9 +524,19 @@ function show(id){
   document.getElementById(id).classList.add('active');
 }
 
+function openSkillModal() { document.getElementById('m-skill').classList.add('active'); }
+function closeSkillModal() { document.getElementById('m-skill').classList.remove('active'); }
+function openMapModal() { document.getElementById('m-map').classList.add('active'); }
+function closeMapModal() { document.getElementById('m-map').classList.remove('active'); }
+
+function selectMap(type) {
+  currentMapType = type;
+  closeMapModal();
+  goSelect(); 
+}
+
 function goSelect(){
   sel=[];
-  bgm.play().catch(()=>{});
   document.querySelectorAll('.k-card').forEach(c=>c.classList.remove('on','off'));
   document.getElementById('sel-ok').disabled=true;
   show('s-sel');
@@ -444,7 +544,6 @@ function goSelect(){
 
 function exitGame(){
   if(confirm('진군을 중단하고 현실로 퇴각하시겠습니까?')){
-    bgm.pause();
     document.body.innerHTML='<p style="color:#d4af37;text-align:center;margin-top:45vh;font-family:\'Noto Serif KR\',serif;font-size:26px;font-weight:900;">패업을 중단하였습니다.</p>';
   }
 }
@@ -511,22 +610,42 @@ function initGame(){
   document.getElementById('btn-early-end').disabled = false;
 
   grid=Array(G).fill(null).map(()=>Array(G).fill(null));
-  totalTurns = 0;
+  totalTurns = 1; 
 
-  // ⛰️ 역동성 부여 : 맵 중앙 부근에 점령 불가능한 '산맥' 무작위 배치 (4~5칸)
-  const mountainSpots = [[4,4],[4,5],[5,4],[5,5],[3,4],[6,5]];
-  let count = 0;
-  while(count < 5) {
-    let spot = mountainSpots[Math.floor(Math.random()*mountainSpots.length)];
-    if(grid[spot[0]][spot[1]] === null) {
-      grid[spot[0]][spot[1]] = 'mountain';
-      count++;
+  const hintEl = document.getElementById('g-hint-text');
+
+  if (currentMapType === 'mountain') {
+    hintEl.textContent = '험준한 산맥 지형: ⛰️ 타일은 우회해야 하는 거대 암석대입니다.';
+    const spots = [[4,4],[4,5],[5,4],[5,5],[3,4],[6,5]];
+    let count = 0;
+    while(count < 5) {
+      let spot = spots[Math.floor(Math.random()*spots.length)];
+      if(grid[spot[0]][spot[1]] === null) { grid[spot[0]][spot[1]] = 'mountain'; count++; }
+    }
+  } else if (currentMapType === 'cross') {
+    hintEl.textContent = '십자형 격전지: 사각 모서리 절벽(🚫)이 잘려 나가 중앙 회랑 위주로 싸웁니다.';
+    for(let r=0; r<G; r++) {
+      for(let c=0; c<G; c++) {
+        if((r<2 && c<2) || (r<2 && c>7) || (r>7 && c<2) || (r>7 && c>7)) {
+          grid[r][c] = 'mountain'; 
+        }
+      }
+    }
+  } else if (currentMapType === 'wall') {
+    hintEl.textContent = '만리장성 방어벽: 중간 철벽(🧱)을 통과할 수 있는 성문은 단 두 곳뿐입니다.';
+    for(let c=0; c<G; c++) {
+      if(c !== 2 && c !== 7) { grid[4][c] = 'mountain'; grid[5][c] = 'mountain'; } 
     }
   }
 
-  // 초기 성읍 배치 (산맥과 안 겹치게 강제 세팅)
-  [[0,0],[0,1],[1,0],[1,1]].forEach(([r,c])=>grid[r][c]=k1.id);
-  [[G-2,G-2],[G-2,G-1],[G-1,G-2],[G-1,G-1]].forEach(([r,c])=>grid[r][c]=k2.id);
+  let startL = [[0,0],[0,1],[1,0],[1,1]], startR = [[G-2,G-2],[G-2,G-1],[G-1,G-2],[G-1,G-1]];
+  if(currentMapType === 'cross') {
+    startL = [[2,2],[2,3],[3,2],[3,3]];
+    startR = [[G-4,G-4],[G-4,G-3],[G-3,G-4],[G-3,G-3]];
+  }
+  startL.forEach(([r,c])=>grid[r][c]=k1.id);
+  startR.forEach(([r,c])=>grid[r][c]=k2.id);
+  
   turn=0; 
   
   document.getElementById('g-prof-img-L').src = k1.img;
@@ -537,40 +656,87 @@ function initGame(){
   document.getElementById('g-prof-name-R').innerHTML = `<span style="color:${k2.accent}">${k2.name}</span><br>${k2.king}`;
   document.getElementById('g-prof-skill-R').textContent = k2.desc;
 
-  hi=adjEmp(k1.id); 
+  hi = calculateHighlights(k1.id); 
   drawGrid(); 
   drawUI();
 }
 
-/* ⛰️ 산맥 우회 및 백제 특성(원격 탐색)이 포함된 인접 탐색식 */
-function adjEmp(kid){
-  const s=new Set();
-  const myCells = [];
+/* 🎯 [핵심 수정] 각 국가의 패시브가 전장 판에 하이라이트(hi)로 직접 주입되는 연산식 */
+function calculateHighlights(kid){
+  const s = new Set();
+  const oppKid = (kid === k1.id ? k2.id : k1.id);
+  let hasNormalPath = false;
 
+  // 1. 기본 상하좌우 탐색
   for(let r=0; r<G; r++) {
     for(let c=0; c<G; c++) {
       if(grid[r][c] === kid) {
-        myCells.push([r, c]);
-        // 기본 4방향 개척
         DIRS.forEach(([dr,dc]) => {
           const nr = r + dr, nc = c + dc;
           if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
-            s.add(`${nr},${nc}`);
+            s.add(`${nr},${c}`);
+            hasNormalPath = true;
           }
         });
       }
     }
   }
 
-  // 백제 특성: 해상 담로 개척 (15% 확률로 한 칸 건너뛴 빈 공간도 하이라이트화)
-  if(kid === 'baekje' && Math.random() < 0.15 && myCells.length > 0) {
-    let randCell = myCells[Math.floor(Math.random() * myCells.length)];
-    DIRS.forEach(([dr, dc]) => {
-      const nr = randCell[0] + (dr * 2), nc = randCell[1] + (dc * 2); // 2칸 전진
-      if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
-        s.add(`${nr},${nc}`);
+  // 특성 1. 고구려: 3의 배수 턴일 때 '대각선 방향의 빈칸'도 점령 타일로 특성 활성화
+  if(kid === 'goguryeo' && (totalTurns % 3 === 0)) {
+    let triggered = false;
+    for(let r=0; r<G; r++) {
+      for(let c=0; c<G; c++) {
+        if(grid[r][c] === 'goguryeo') {
+          DIAG_DIRS.forEach(([dr,dc]) => {
+            const nr = r + dr, nc = c + dc;
+            if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
+              s.add(`${nr},${nc}`);
+              triggered = true;
+            }
+          });
+        }
       }
-    });
+    }
+    if(triggered) setTimeout(() => triggerSkillEffect('고구려', '기사의 강습 발동! 대각선 확장 타일이 활성화되었습니다!'), 50);
+  }
+
+  // 특성 2. 백제: 15% 확률 적중 시 '1칸 건너뛴 외딴 전술 요충지'들 전격 활성화
+  if(kid === 'baekje' && Math.random() < 0.15) {
+    let triggered = false;
+    for(let r=0; r<G; r++) {
+      for(let c=0; c<G; c++) {
+        if(grid[r][c] === 'baekje') {
+          DIRS.forEach(([dr,dc]) => {
+            const nr = r + (dr * 2), nc = c + (dc * 2); // 2칸 점프
+            if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
+              s.add(`${nr},${nc}`);
+              triggered = true;
+            }
+          });
+        }
+      }
+    }
+    if(triggered) setTimeout(() => triggerSkillEffect('백제', '해상 담로 개척 발동! 원격 도약 타일이 활성화되었습니다!'), 50);
+  }
+
+  // 특성 3. 신라: 내 영토와 인접한 '적의 돌(영토)'을 직접 타격하여 강탈하도록 불빛 활성화
+  if(kid === 'silla') {
+    let triggered = false;
+    for(let r=0; r<G; r++) {
+      for(let c=0; c<G; c++) {
+        if(grid[r][c] === 'silla') {
+          DIRS.forEach(([dr,dc]) => {
+            const nr = r + dr, nc = c + dc;
+            if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === oppKid) {
+              s.add(`${nr},${nc}`); // 적 영토 좌표를 강제로 하이라이트에 포함!
+              triggered = true;
+            }
+          });
+        }
+      }
+    }
+    if(triggered) setTimeout(() => triggerSkillEffect('신라', '화랑의 풍월도 발동! 인접한 적의 돌을 흡수/강탈할 수 있습니다!'), 50);
   }
 
   return s;
@@ -589,11 +755,18 @@ function drawGrid(){
     const key=`${r},${c}`, kid=grid[r][c], isHi=hi.has(key);
     
     if(kid === 'mountain') {
-      d.style.cssText='background:#222; border:1px dashed #555; display:flex; align-items:center; justify-content:center; color:#888; font-size:12px; font-weight:900;';
-      d.textContent = '⛰️';
+      d.style.cssText='background:#1b1510; border:1px solid #443322; display:flex; align-items:center; justify-content:center; color:#887766; font-size:12px; font-weight:900;';
+      d.textContent = currentMapType === 'wall' ? '🧱' : (currentMapType==='cross' ? '🚫':'⛰️');
     } else if(kid){
       const kd=KD[kid];
       d.style.cssText=`background:${kd.color};border:2px solid ${kd.accent}aa;`;
+      // 신라 특성용: 만약 하이라이트된 곳이 적의 돌이라면, 특수 크로스헤어 테두리 부여
+      if(isHi) {
+        d.classList.add('hi');
+        d.style.boxShadow=`0 0 20px #fff, inset 0 0 12px #ff0000`;
+        d.style.borderColor = '#ffffff';
+        if(!autoInterval) d.onclick=()=>claimCell(r,c);
+      }
     } else if(isHi){
       d.classList.add('hi');
       d.style.cssText=`background:${cur.color}90;border:2px solid #fff;box-shadow:0 0 14px ${cur.accent}, inset 0 0 8px #fff;`;
@@ -622,7 +795,7 @@ function drawUI(){
   fr.style.width=(c2/tot*100)+'%'; fr.style.background=`linear-gradient(90deg,${k2.accent},${k2.color})`;
   
   const ti=document.getElementById('g-turn');
-  ti.innerHTML=`${cur.king} 장군의 대의선택 <br><span style="font-size:13px; color:#ffeb3b; font-weight:500;">고유효과: ${cur.desc}</span>`;
+  ti.innerHTML=`[제 ${totalTurns}정벌] ${cur.king} 장군의 차례 <br><span style="font-size:13px; color:#ffeb3b; font-weight:500;">상태: ${cur.desc}</span>`;
   ti.style.cssText=`color:#fff;background:linear-gradient(135deg, ${cur.color}, #000);border:2px solid ${cur.accent};`;
 
   document.getElementById('g-prof-L').classList.toggle('active-turn', turn===0);
@@ -635,91 +808,59 @@ function startAutoPlay() {
   document.getElementById('btn-early-end').disabled = true;
   
   autoInterval = setInterval(() => {
-    if(hi.size === 0) {
-      clearInterval(autoInterval); autoInterval = null;
-      showVictory(); return;
-    }
+    if(hi.size === 0) { clearInterval(autoInterval); autoInterval = null; showVictory(); return; }
     const arr = Array.from(hi);
-    const randomPick = arr[Math.floor(Math.random() * arr.length)];
-    const [r, c] = randomPick.split(',').map(Number);
+    const [r, c] = arr[Math.floor(Math.random() * arr.length)].split(',').map(Number);
     claimCell(r, c);
   }, 200); 
 }
 
-/* 핵심 영토 점령 및 국가별 고유 발동 함수 */
 function claimCell(r,c){
   btnSfx();
   const curKid = (turn === 0 ? k1.id : k2.id);
-  const oppKid = (turn === 0 ? k2.id : k1.id);
   
-  // 신라 특성: 화랑의 풍월도 (상대가 신라 옆 칸을 먹으려고 밀고 들어올 때 15%로 가로채기 방어)
-  if(oppKid === 'silla' && Math.random() < 0.15 && isAdjacentTo(r, c, 'silla')) {
-    grid[r][c] = 'silla'; // 신라가 역포섭해버림
-    triggerSkillEffect('신라', '화랑의 풍월도 발동! 침공 경로를 역포섭했습니다!');
-  } else {
-    grid[r][c] = curKid;
-  }
-  
+  // 땅 점령 실행 (신라가 활성화된 적의 돌을 눌렀을 때도 내 소유로 뺏어오게 됨)
+  grid[r][c] = curKid;
   totalTurns++;
 
-  // 고구려 특성: 기사의 강습 (3턴마다 대각선 빈칸 하나 보너스 동시 점령)
-  if(curKid === 'goguryeo' && totalTurns % 3 === 0) {
-    let bonusPicked = false;
-    DIAG_DIRS.forEach(([dr, dc]) => {
-      if(!bonusPicked) {
-        const nr = r + dr, nc = c + dc;
-        if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
-          grid[nr][nc] = 'goguryeo';
-          bonusPicked = true;
-          triggerSkillEffect('고구려', '기사의 강습! 대각선 영토를 추가 저격 점령했습니다!');
-        }
-      }
-    });
-  }
-
-  const mCount = grid.flat().filter(x=>x==='mountain').length;
-  if(grid.flat().filter(Boolean).length === G*G){
+  // 맵이 다 찼는지 확인
+  const freeSpaces = grid.flat().filter(x => x === null).length;
+  if(freeSpaces === 0){
     if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
     drawGrid(); drawUI(); showVictory(); return; 
   }
   
   if(checkPredictiveEnd()) return;
 
-  const nt=1-turn, nk=nt===0?k1:k2;
-  const nadj=adjEmp(nk.id);
+  // 다음 차례 교대 연산
+  const nextTurn = 1 - turn;
+  const nextKing = nextTurn === 0 ? k1 : k2;
+  let nextHi = calculateHighlights(nextKing.id);
   
-  if(nadj.size>0){ turn=nt; hi=nadj; }
-  else {
-    const cur=turn===0?k1:k2;
-    const cadj=adjEmp(cur.id);
-    if(cadj.size===0 || adjEmp(nk.id).size===0){ 
+  if(nextHi.size > 0){ 
+    turn = nextTurn; 
+    hi = nextHi; 
+  } else {
+    // 다음 플레이어의 활로가 없으면 현재 플레이어가 한 번 더 찬스를 잡음
+    const currentKing = turn === 0 ? k1 : k2;
+    const retryHi = calculateHighlights(currentKing.id);
+    if(retryHi.size === 0) { 
       if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
       drawGrid(); drawUI(); showVictory(); return; 
     }
-    hi=cadj;
+    hi = retryHi;
   }
   drawGrid(); drawUI();
 }
 
-function isAdjacentTo(r, c, kid) {
-  let found = false;
-  DIRS.forEach(([dr, dc]) => {
-    const nr = r + dr, nc = c + dc;
-    if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === kid) found = true;
-  });
-  return found;
-}
-
 function triggerSkillEffect(country, message) {
-  const ti = document.getElementById('g-turn');
-  ti.innerHTML = `<span style="color:#ffff00; font-weight:900;">⚡ ${country} ${message}</span>`;
+  const textEl = document.getElementById('g-hint-text');
+  textEl.innerHTML = `<span style="color:#ffeb3b; font-weight:900; text-shadow: 0 0 8px #ffeb3b;">⚡ ${country} ${message}</span>`;
 }
 
 function checkPredictiveEnd() {
-  const p1Adj = adjEmp(k1.id);
-  const p2Adj = adjEmp(k2.id);
-
-  if (p1Adj.size === 0 || p2Adj.size === 0) {
+  const p1Adj = calculateHighlights(k1.id); const p2Adj = calculateHighlights(k2.id);
+  if (p1Adj.size === 0 && p2Adj.size === 0) {
     let bonus1 = 0, bonus2 = 0;
     for(let r=0; r<G; r++) {
       for(let c=0; c<G; c++) {
@@ -729,10 +870,8 @@ function checkPredictiveEnd() {
         }
       }
     }
-    
     if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-    alert(`[천하 정세 대판단]\n\n산맥과 전선 차단으로 인해 활로가 막혔습니다.\n각국의 잔여 안전 진영을 자동 귀속합니다.\n\n고구려 회수 영토: +${bonus1}칸\n상대국 회수 영토: +${bonus2}칸`);
-    
+    alert(`[천하 정세 대판단]\n양국 모두 더 이상 진격할 영토 활로가 없습니다. 안전지대를 잔여 자동 귀속합니다.`);
     for(let r=0; r<G; r++) {
       for(let c=0; c<G; c++) {
         if(grid[r][c] === null) {
@@ -741,8 +880,7 @@ function checkPredictiveEnd() {
         }
       }
     }
-    showVictory();
-    return true;
+    showVictory(); return true;
   }
   return false;
 }
@@ -755,9 +893,7 @@ function canReach(startR, startC, kid) {
       const nr = r + dr, nc = c + dc;
       if(nr >= 0 && nr < G && nc >= 0 && nc < G) {
         if(grid[nr][nc] === kid) return true;
-        if(grid[nr][nc] === null && !visited.has(`${nr},${nc}`)) {
-          visited.add(`${nr},${nc}`); queue.push([nr, nc]);
-        }
+        if(grid[nr][nc] === null && !visited.has(`${nr},${nc}`)) { visited.add(`${nr},${nc}`); queue.push([nr, nc]); }
       }
     }
   }
@@ -775,31 +911,44 @@ function showVictory(){
   if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
   const c1=cntCells(k1.id), c2=cntCells(k2.id);
   const winner=c1>c2?k1:c2>c1?k2:null;
-  bgm.pause();
-  winAud.currentTime=0; winAud.play().catch(()=>{});
 
-  document.getElementById('w-trophy').textContent = winner?'🏆':'🤝';
-  const wt=document.getElementById('w-title');
-  wt.textContent = winner ? winner.name+' 천하통일!' : '왕권의 호각무세 (무승부)';
-  wt.style.color  = winner ? winner.accent : '#d4af37';
-  document.getElementById('w-img').src = winner ? winner.img : k1.img;
+  const imgLayout = document.getElementById('w-img-layout');
+  const speechEl = document.getElementById('w-speech');
+  const trophyEl = document.getElementById('w-trophy');
+  const titleEl = document.getElementById('w-title');
 
-  const speech = winner
-    ? winner.wins[Math.floor(Math.random()*winner.wins.length)]
-    : '대업을 나눈 위대한 영웅들에게 하늘의 축복이 있기를!';
-  typeWriter('w-speech','“ '+speech+' ”',35);
+  if(winner) {
+    trophyEl.textContent = '🏆';
+    titleEl.textContent = winner.name + ' 천하통일!';
+    titleEl.style.color = winner.accent;
+    imgLayout.innerHTML = `<img class="w-img" src="${winner.img}" alt="승리왕">`;
+    
+    const speech = winner.wins[Math.floor(Math.random()*winner.wins.length)];
+    typeWriter('w-speech', `“ ${speech} ”`, 30);
+  } else {
+    trophyEl.textContent = '🤝';
+    titleEl.textContent = '왕권의 호각무세 (무승부)';
+    titleEl.style.color = '#d4af37';
+    imgLayout.innerHTML = `
+      <img class="w-img" src="${k1.img}" style="border-color:${k1.accent}" alt="L">
+      <img class="w-img" src="${k2.img}" style="border-color:${k2.accent}" alt="R">
+    `;
+    
+    speechEl.innerHTML = `
+      <div style="text-align:left; width:100%; font-size:15px; color:${k1.accent}"><strong>【${k1.king}】</strong> ${k1.drawSpeech}</div>
+      <div style="margin-top:10px; text-align:right; width:100%; font-size:15px; color:${k2.accent}"><strong>【${k2.king}】</strong> ${k2.drawSpeech}</div>
+    `;
+  }
 
   document.getElementById('w-scores').innerHTML=`
     <div class="w-sc">
       <div class="w-sc-name" style="color:${k1.accent}">${k1.name}</div>
       <div class="w-sc-val" style="color:${k1.accent}">${c1}</div>
-      <div style="color:rgba(255,255,255,0.4);font-size:15px">영토 군현</div>
     </div>
     <div style="color:rgba(255,255,255,0.25);align-self:center;font-size:36px">:</div>
     <div class="w-sc">
       <div class="w-sc-name" style="color:${k2.accent}">${k2.name}</div>
       <div class="w-sc-val" style="color:${k2.accent}">${c2}</div>
-      <div style="color:rgba(255,255,255,0.4);font-size:15px">영토 군현</div>
     </div>`;
   show('s-win');
 }
@@ -810,12 +959,8 @@ function typeWriter(id,txt,ms){
 }
 
 function resetAll(){
-  winAud.pause(); winAud.currentTime=0;
-  bgm.play().catch(()=>{});
   show('s-title');
 }
-
-document.addEventListener('click', ()=>{ if(bgm.paused) bgm.play().catch(()=>{}); }, {once:true});
 </script>
 </body>
 </html>
