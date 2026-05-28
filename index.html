@@ -480,7 +480,7 @@ function endEarly(){
   if(confirm('현재 점수로 게임을 종료하시겠습니까?')) showVictory();
 }
 
-/* ═══════════ 승리 화면 ═══════════ */
+/* ═══════════ 승리 화면 ═══════════ **/
 function showVictory(){
   const c1=cntCells(k1.id), c2=cntCells(k2.id);
   const winner=c1>c2?k1:c2>c1?k2:null;
