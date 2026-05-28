@@ -16,7 +16,7 @@ html,body {
 .screen { position:absolute; inset:0; display:none; }
 .screen.active { display:flex; }
 
-/* ── 1. 서체 및 버튼 이미지화 업그레이드 (더 크고 웅장하게) ── */
+/* 공통 프리미엄 황금빛 버튼 (이미지 형태 가체화) */
 .g-btn {
   background: linear-gradient(180deg, #4a2d11 0%, #261504 100%);
   border: 3px solid #d4af37;
@@ -27,7 +27,6 @@ html,body {
   text-align: center;
   cursor: pointer;
   letter-spacing: 3px;
-  /* 글자 자체를 이미지처럼 보이게 하는 강력한 엠보싱 효과 */
   text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);
   box-shadow: inset 0 2px 4px rgba(255,255,255,0.25), 0 6px 14px rgba(0,0,0,0.8);
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -62,7 +61,7 @@ html,body {
   border-color: #ff9999;
 }
 
-/* ── 타이틀 화면 ── */
+/* ── ① 초기 타이틀 ── */
 #s-title {
   background:url('image/초기화면.png') center/cover no-repeat;
   flex-direction:column; align-items:center; justify-content:flex-end;
@@ -73,7 +72,7 @@ html,body {
 .t-row { display:flex; gap:20px; }
 .t-btn-sub { width:150px; padding:14px 0; font-size:18px; }
 
-/* ── 나라 선택 화면 ── */
+/* ── ② 나라 선택 ── */
 #s-sel {
   flex-direction:column; align-items:center; justify-content: center;
   background: url('image/세 왕.png') center/cover no-repeat;
@@ -109,7 +108,7 @@ html,body {
 .k-card.off { opacity:0.2; cursor:not-allowed; transform: scale(0.95); }
 .sel-btn-ok { width: 300px; padding: 18px 0; font-size: 26px; }
 
-/* ── 대화 화면 (서체 대폭 확장) ── */
+/* ── ③ 대화 화면 ── */
 #s-dlg {
   background: linear-gradient(160deg, #0a0500, #171002);
   flex-direction: column; justify-content: space-between; padding: 0;
@@ -148,46 +147,56 @@ html,body {
 }
 .dlg-next { width: 280px; padding: 16px 0; font-size: 22px; }
 
-/* ── 게임 전장 화면 ── */
+/* ── ④ 게임 본 화면 (1번 & 2번 요구사항 레이아웃 대폭 개선) ── */
 #s-game {
   background: radial-gradient(circle at center, #241504 0%, #050300 100%);
   flex-direction: column; align-items: center; justify-content: space-between;
-  padding: 20px; gap: 15px;
+  padding: 15px 20px; gap: 5px;
 }
-.g-header { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; }
-.g-title { color:#d4af37; font-size:32px; font-weight:900; letter-spacing: 4px; text-shadow: 0 0 15px rgba(212,175,55,0.7); }
-.g-scorebar { width:100%; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 10px; border: 2px solid rgba(212,175,55,0.2); }
-.g-slbls { display:flex; justify-content:space-between; font-size:22px; font-weight: 800; margin-bottom:8px; }
-.g-track { height:18px; background:rgba(255,255,255,0.06); border-radius:9px; overflow:hidden; position:relative; border: 1px solid rgba(212,175,55,0.4); }
+.g-header { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 5; flex-shrink: 0; }
+.g-title { color:#d4af37; font-size:30px; font-weight:900; letter-spacing: 4px; text-shadow: 0 0 15px rgba(212,175,55,0.7); }
+.g-scorebar { width:100%; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 10px; border: 2px solid rgba(212,175,55,0.2); }
+.g-slbls { display:flex; justify-content:space-between; font-size:20px; font-weight: 800; margin-bottom:6px; }
+.g-track { height:16px; background:rgba(255,255,255,0.06); border-radius:8px; overflow:hidden; position:relative; border: 1px solid rgba(212,175,55,0.4); }
 .g-fill  { position:absolute; top:0; height:100%; transition:width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.g-turn  { padding:10px 40px; border-radius:25px; font-size:22px; font-weight:900; margin-top: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+.g-turn  { padding:8px 35px; border-radius:25px; font-size:20px; font-weight:900; margin-top: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
 
-/* 메인 프레임 레이아웃 */
+/* 2번 피드백 반영: 중앙 집중식 밸런스 배치 유도 마스터 구조 */
 .g-main-wrapper {
-  flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 25px; padding: 5px 1%; overflow: hidden;
+  flex: 1; width: 100%; max-width: 1250px; 
+  display: flex; justify-content: space-around; align-items: center; 
+  padding: 5px 0; overflow: hidden;
 }
+
+/* 좌우 캐릭터 프로필 패널: 중간지점에 자연스럽게 정착 */
 .g-side-profile {
-  width: 18vw; height: 52vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  background: rgba(0,0,0,0.5); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 12px;
+  width: 17vw; height: 48vh; max-width: 190px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  background: rgba(0,0,0,0.55); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 12px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.6); transition: all 0.3s ease;
 }
-.g-side-profile img { width: 100%; height: 80%; object-fit: contain; object-position: bottom; }
+.g-side-profile img { width: 100%; height: 78%; object-fit: contain; object-position: bottom; }
 .g-side-profile .g-profile-name { 
-  width: 100%; text-align: center; color: #fff; font-size: 20px; font-weight: 800; 
-  padding: 10px 0 2px 0; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 8px; line-height: 1.4;
+  width: 100%; text-align: center; color: #fff; font-size: 18px; font-weight: 800; 
+  padding: 8px 0 2px 0; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 6px; line-height: 1.4;
 }
 .g-side-profile.active-turn {
-  border-color: #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.6); background: rgba(54,34,14,0.5); transform: scale(1.04);
+  border-color: #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.6); background: rgba(54,34,14,0.5); transform: scale(1.05);
 }
 
-.g-grid-container { flex: 1; display: flex; align-items: center; justify-content: center; }
+/* 1번 피드백 반영: 상하가 절대 잘리지 않도록 크기 기준 최적화 및 축소방지 부여 */
+.g-grid-container { 
+  display: flex; align-items: center; justify-content: center; 
+  flex-shrink: 0; padding: 0 10px;
+}
 #g-grid  {
-  display:grid; gap:6px; padding:16px;
-  background:rgba(5,3,1,0.92); border-radius:14px;
+  display:grid; gap:5px; padding:12px;
+  background:rgba(5,3,1,0.94); border-radius:14px;
   border:3px solid rgba(212,175,55,0.45);
   box-shadow: 0 15px 45px rgba(0,0,0,0.95);
 }
-.cell { width:min(5.6vh, 5.6vw); height:min(5.6vh, 5.6vw); border-radius:6px; transition: all 0.15s ease; }
+/* 세로 크기 기준을 vh와 vw의 균형 수치로 정밀 하향 조절 */
+.cell { width:min(5.2vh, 5.2vw); height:min(5.2vh, 5.2vw); border-radius:6px; transition: all 0.15s ease; }
 .cell.hi { cursor:pointer; animation: pulseGlow 1.2s infinite alternate; }
 
 @keyframes pulseGlow {
@@ -195,38 +204,58 @@ html,body {
   to { transform: scale(1.04); filter: brightness(1.35); }
 }
 
-.g-footer { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 14px; z-index: 5; }
-.g-hint { color:rgba(212,175,55,0.85); font-size:18px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
+.g-footer { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; flex-shrink: 0; }
+.g-hint { color:rgba(212,175,55,0.85); font-size:17px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
 .g-btn-group { display: flex; gap: 18px; width: 100%; justify-content: center; }
-.g-foot-btn { padding: 14px 32px; font-size: 18px; }
+.g-foot-btn { padding: 12px 30px; font-size: 17px; }
 
-/* ── 승리 정산 화면 ── */
+/* ── ⑤ 승리 정산 화면 (3번 & 4번 요구사항 전면 개편) ── */
 #s-win {
-  background:radial-gradient(ellipse at 50% 30%, #422907, #050300);
-  flex-direction:column; align-items:center; justify-content:center;
-  gap:25px; padding:20px;
+  background: radial-gradient(circle at center, #3d2508 0%, #050300 100%);
+  flex-direction: row; align-items: center; justify-content: center;
+  gap: 60px; padding: 40px 8%;
 }
-.w-trophy { font-size:80px; animation:popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
-.w-title  { font-size:52px; font-weight:900; animation:popIn 0.8s 0.1s ease both; text-shadow:0 0 35px currentColor, 0 3px 6px #000; }
-.w-img    {
-  width:260px; height:320px; object-fit:contain; border-radius:14px;
-  border:3px solid #d4af37; box-shadow:0 0 45px rgba(212,175,55,0.8);
-  background: rgba(0,0,0,0.5); animation:popIn 1s 0.2s ease both;
+
+/* 좌측 영역: 캐릭터 일러스트 및 안정화된 대사창 */
+.w-left-zone {
+  display: flex; flex-direction: column; align-items: center; gap: 20px; width: 45%;
 }
+.w-img {
+  width: 280px; height: 350px; object-fit: contain; border-radius: 14px;
+  border: 3px solid #d4af37; box-shadow: 0 0 45px rgba(212,175,55,0.7);
+  background: rgba(0,0,0,0.5); animation: popIn 0.8s ease both;
+}
+/* 3번 피드백 반영: 두 줄 이상이어도 자동 팽창하며 내부에 완벽히 갇히는 구조 */
 .w-speech {
-  color:#fff; font-size:24px; font-weight: 800; text-align:center;
-  max-width:650px; line-height:1.8; font-style:italic; min-height:64px;
-  background: rgba(18,12,6,0.9); padding: 22px 30px; border-radius:12px; border: 2px dashed rgba(212,175,55,0.4);
+  color: #fff; font-size: 22px; font-weight: 800; text-align: center;
+  width: 100%; max-width: 460px; line-height: 1.6; font-style: italic;
+  background: rgba(18,12,6,0.95); padding: 20px 24px; border-radius: 12px; 
+  border: 3px solid rgba(212,175,55,0.5); box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+  word-break: keep-all; display: flex; align-items: center; justify-content: center;
 }
-.w-scores { display:flex; gap:80px; }
-.w-sc { text-align:center; }
-.w-sc-val { font-size:48px; font-weight:900; }
-.w-sc-name { font-size:24px; font-weight:800; }
-.reset-btn { width: 260px; padding: 16px 0; font-size: 20px; }
+
+/* 우측 영역: 타이틀, 전산 스코어 바, 재작동 제어 버튼 수집 */
+.w-right-zone {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 35px; width: 45%;
+}
+.w-trophy { font-size: 70px; animation: popIn 0.5s ease both; margin-bottom: -15px; }
+.w-title { 
+  font-size: 48px; font-weight: 900; text-align: center;
+  text-shadow: 0 0 30px currentColor, 0 3px 6px #000; letter-spacing: 2px;
+  animation: popIn 0.7s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
+}
+.w-scores { 
+  display: flex; gap: 60px; background: rgba(0,0,0,0.4); 
+  padding: 20px 40px; border-radius: 14px; border: 1px solid rgba(212,175,55,0.2);
+}
+.w-sc { text-align: center; }
+.w-sc-name { font-size: 24px; font-weight: 800; margin-bottom: 5px; }
+.w-sc-val { font-size: 52px; font-weight: 900; text-shadow: 0 2px 4px #000; }
+.reset-btn { width: 280px; padding: 18px 0; font-size: 22px; margin-top: 10px; }
 
 @keyframes popIn {
-  from { transform:scale(0.4); opacity:0; }
-  to   { transform:scale(1);   opacity:1; }
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 </style>
 </head>
@@ -327,19 +356,24 @@ html,body {
 </div>
 
 <div id="s-win" class="screen">
-  <div class="w-trophy" id="w-trophy">🏆</div>
-  <div class="w-title"  id="w-title"></div>
-  <img  class="w-img"   id="w-img" src="" alt="">
-  <div  class="w-speech" id="w-speech"></div>
-  <div  class="w-scores" id="w-scores"></div>
-  <button class="g-btn reset-btn" onclick="btnSfx();resetAll()">새로운 천하 정벌</button>
+  <div class="w-left-zone">
+    <img class="w-img" id="w-img" src="" alt="">
+    <div class="w-speech" id="w-speech"></div>
+  </div>
+
+  <div class="w-right-zone">
+    <div class="w-trophy" id="w-trophy">🏆</div>
+    <div class="w-title" id="w-title"></div>
+    <div class="w-scores" id="w-scores"></div>
+    <button class="g-btn reset-btn" onclick="btnSfx();resetAll()">새로운 천하 정벌</button>
+  </div>
 </div>
 
 <audio id="aud-bgm" src="audio/배경음악.mp3" loop preload="auto"></audio>
 <audio id="aud-win" src="audio/승리.mp3"     preload="auto"></audio>
 
 <script>
-/* ═══════════ 데이터 세팅 ═══════════ */
+/* ═══════════ 데이터 및 핵심 연산 로직 ═══════════ */
 const KD = {
   goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽',
     img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
@@ -501,7 +535,6 @@ function initGame(){
   drawUI();
 }
 
-/* ── 2. 영토 상하좌우 탐색 로직 디버깅 완료 ── */
 function adjEmp(kid){
   const s=new Set();
   for(let r=0; r<G; r++) {
@@ -509,7 +542,6 @@ function adjEmp(kid){
       if(grid[r][c] === kid) {
         DIRS.forEach(([dr,dc]) => {
           const nr = r + dr, nc = c + dc;
-          // 오타 수정: ${nr},${c}에서 ${nr},${nc}로 교체하여 상하좌우 완전개방
           if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
             s.add(`${nr},${nc}`);
           }
@@ -524,7 +556,7 @@ function cntCells(kid){ return grid.flat().filter(x=>x===kid).length; }
 
 function drawGrid(){
   const el=document.getElementById('g-grid');
-  el.style.gridTemplateColumns=`repeat(${G}, min(5.6vh, 5.6vw))`;
+  el.style.gridTemplateColumns=`repeat(${G}, min(5.2vh, 5.2vw))`;
   el.innerHTML='';
   const cur=turn===0?k1:k2;
   for(let r=0;r<G;r++) for(let c=0;c<G;c++){
@@ -567,7 +599,6 @@ function drawUI(){
   document.getElementById('g-prof-R').classList.toggle('active-turn', turn===1);
 }
 
-/* ── 3. 자동입력 무한 루프 수정 및 영토 전진 확장 로직 고도화 ── */
 function startAutoPlay() {
   if(autoInterval) return;
   
@@ -582,7 +613,6 @@ function startAutoPlay() {
       return;
     }
     
-    // 버그 해결: 매번 고정 좌표를 찍는 구조에서 하이라이트 활성 배열 중 하나를 랜덤 피킹하여 진격하는 구조로 변환
     const arr = Array.from(hi);
     const randomPick = arr[Math.floor(Math.random() * arr.length)];
     const [r, c] = randomPick.split(',').map(Number);
