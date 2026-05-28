@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>삼국지 땅따먹기 : 영웅의 도래 ver 9.91</title>
+<title>삼국지 땅따먹기 : 영웅의 도래 ver 9.92</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght=500;800;900&display=swap');
 
@@ -147,39 +147,60 @@ html,body {
   background: linear-gradient(160deg, #0a0500, #171002);
   flex-direction: column; justify-content: space-between; padding: 0;
 }
-.dlg-hdr { 
-  color: #d4af37; font-size: 26px; font-weight: 900; letter-spacing: 12px; 
-  text-align: center; padding: 25px 0; background: rgba(0,0,0,0.7); 
-  border-bottom: 2px solid rgba(212,175,55,0.5); text-shadow: 0 0 15px rgba(212,175,55,0.8);
+
+/* 2. 패권 선언을 텍스트 대신 멋진 이미지 현판(Emblem) 형태로 스타일 교체 */
+.dlg-hdr-wrap {
+  width: 100%; background: rgba(0,0,0,0.85); padding: 15px 0;
+  display: flex; justify-content: center; align-items: center;
+  border-bottom: 3px double rgba(212,175,55,0.6); box-shadow: 0 4px 15px rgba(0,0,0,0.7);
 }
+.dlg-emblem {
+  background: linear-gradient(135deg, #3d230a 0%, #1a0e03 100%);
+  border: 2px solid #d4af37; border-radius: 4px;
+  padding: 10px 60px; position: relative;
+  box-shadow: 0 0 15px rgba(212,175,55,0.4), inset 0 0 8px rgba(212,175,55,0.5);
+}
+.dlg-emblem::before, .dlg-emblem::after {
+  content: "❖"; color: #d4af37; position: absolute; top: 50%; transform: translateY(-50%); font-size: 16px;
+}
+.dlg-emblem::before { left: 20px; }
+.dlg-emblem::after { right: 20px; }
+.dlg-emblem-text {
+  color: #fffde6; font-size: 24px; font-weight: 900; letter-spacing: 8px;
+  text-shadow: 0 2px 4px #000, 0 0 10px rgba(212,175,55,0.8);
+}
+
+/* 1. 하단 프레임 탈출을 막기 위해 컨테이너 내부 정렬을 위로 끌어올림 */
 .dlg-fullscreen-body {
-  flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; position: relative; padding: 0 3%;
+  flex: 1; width: 100%; display: flex; justify-content: space-between; 
+  align-items: center; position: relative; padding: 0 3%; margin-top: -4vh;
 }
 .dlg-side-char {
-  width: 43vw; height: 65vh; display: flex; flex-direction: column; justify-content: flex-end;
+  width: 43vw; height: 68vh; display: flex; flex-direction: column; justify-content: center;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.15; transform: scale(0.92); filter: grayscale(60%);
 }
-.dlg-side-char img { width: 100%; height: 75%; object-fit: contain; object-position: bottom center; }
+.dlg-side-char img { width: 100%; height: 70%; object-fit: contain; object-position: bottom center; }
 
-/* 1. 각 국 대사 칸 크기 조절 및 폰트 축소 (프레임 침범 해결) */
+/* 1. 대사 칸 위치 상향 조정 및 안정적인 여백 부여 */
 .dlg-side-bubble {
-  width: 100%; min-height: 105px; background: rgba(10, 6, 2, 0.96);
-  border: 3px solid rgba(212, 175, 55, 0.4); border-radius: 10px;
-  padding: 16px 20px; text-align: center; color: #ffffff;
-  font-size: 20px; font-weight:800; line-height: 1.6; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+  width: 100%; min-height: 110px; background: rgba(12, 8, 4, 0.98);
+  border: 3px solid rgba(212, 175, 55, 0.4); border-radius: 12px;
+  padding: 18px 24px; text-align: center; color: #ffffff;
+  font-size: 20px; font-weight:800; line-height: 1.6; box-shadow: 0 12px 30px rgba(0,0,0,0.8);
   display: flex; flex-direction: column; justify-content: center; align-items: center;
+  margin-top: 15px; /* 캐릭터 이미지 밑에 딱 붙어서 위쪽으로 안착되게 유도 */
 }
 .dlg-side-char.act { opacity: 1; transform: scale(1.03); filter: grayscale(0%); }
-.dlg-side-char.act .dlg-side-bubble { border-color: #d4af37; background: rgba(33, 20, 7, 0.98); box-shadow: 0 0 25px rgba(212,175,55,0.35); }
+.dlg-side-char.act .dlg-side-bubble { border-color: #d4af37; background: rgba(36, 22, 9, 0.98); box-shadow: 0 0 25px rgba(212,175,55,0.45); }
 
-.dlg-center-ui { position: absolute; bottom: 30vh; left: 50%; transform: translateX(-50%); z-index: 10; }
+.dlg-center-ui { position: absolute; bottom: 32vh; left: 50%; transform: translateX(-50%); z-index: 10; }
 .dlg-dots { display:flex; gap:12px; background: rgba(0,0,0,0.7); padding: 10px 22px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.3); }
 .dlg-dots span { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.3s; }
 .dlg-dots span.done { background:#d4af37; box-shadow: 0 0 12px #d4af37; }
 
 .dlg-foot { 
   width: 100%; display: flex; justify-content: center; padding: 25px 0; 
-  background: rgba(0,0,0,0.7); border-top: 2px solid rgba(212,175,55,0.4); 
+  background: rgba(0,0,0,0.8); border-top: 2px solid rgba(212,175,55,0.4); z-index: 15;
 }
 .dlg-next { width: 280px; padding: 16px 0; font-size: 22px; }
 
@@ -198,27 +219,32 @@ html,body {
 .g-turn  { padding:8px 35px; border-radius:25px; font-size:19px; font-weight:900; margin-top: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center;}
 
 .g-main-wrapper {
-  flex: 1; width: 100%; max-width: 1250px; 
-  display: flex; justify-content: space-around; align-items: center; 
+  flex: 1; width: 100%; max-width: 1350px; 
+  display: flex; justify-content: space-between; align-items: center; 
   padding: 5px 0; overflow: hidden;
 }
 
+/* 3. 양쪽 캐릭터 프로필 칸 폭 확장 (17vw -> 22vw / max 190px -> 260px) */
 .g-side-profile {
-  width: 17vw; height: 48vh; max-width: 190px;
+  width: 22vw; height: 52vh; max-width: 260px;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  background: rgba(0,0,0,0.55); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 12px;
+  background: rgba(10,7,4,0.75); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 16px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.6); transition: all 0.3s ease;
 }
-.g-side-profile img { width: 100%; height: 74%; object-fit: contain; object-position: bottom; }
+.g-side-profile img { width: 100%; height: 70%; object-fit: contain; object-position: bottom; }
+
+/* 3. 프로필 카드 확장 후 내부 글자 크기(Font-size) 확대 및 여백 상향 조정 */
 .g-side-profile .g-profile-name { 
-  width: 100%; text-align: center; color: #fff; font-size: 16px; font-weight: 800; 
-  padding: 6px 0 2px 0; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 6px; line-height: 1.3;
+  width: 100%; text-align: center; color: #fff; font-size: 20px; font-weight: 900; 
+  padding: 10px 0 6px 0; border-top: 1px solid rgba(212,175,55,0.3); margin-top: 10px; line-height: 1.4;
 }
 .g-side-profile .g-profile-skill {
-  font-size: 11px; color: #d4af37; margin-top: 3px; font-weight: 500; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;
+  width: 100%; text-align: center; font-size: 14px; color: #ffeb3b; margin-top: 6px; font-weight: 800; 
+  background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; line-height: 1.4; word-break: keep-all;
+  border: 1px solid rgba(212,175,55,0.15);
 }
 .g-side-profile.active-turn {
-  border-color: #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.6); background: rgba(54,34,14,0.5); transform: scale(1.05);
+  border-color: #d4af37; box-shadow: 0 0 35px rgba(212,175,55,0.7); background: rgba(54,34,14,0.6); transform: scale(1.04);
 }
 
 .g-grid-container { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 10px; }
@@ -294,7 +320,7 @@ html,body {
       <button class="g-btn t-btn-sub" onclick="btnSfx();openMapModal()">열전 모드</button>
     </div>
     <button class="g-btn t-btn-sub red" onclick="btnSfx();exitGame()">전투이탈</button>
-    <div class="v-text">ver 9.91</div>
+    <div class="v-text">ver 9.92</div>
   </div>
 </div>
 
@@ -311,7 +337,7 @@ html,body {
       </div>
       <div class="info-card" style="border-color:#2ecc71">
         <img src="image/온조왕.png" alt="온조왕">
-        <div class="info-name" style="color:#2ecc7 green">백제 (온조왕)</div>
+        <div class="info-name" style="color:#2ecc71">백제 (온조왕)</div>
         <div class="info-skill">해상 담로의 개척</div>
         <div class="info-desc">백제 턴 개시 시 15%의 확률로 기습 통로가 개척됩니다. 인접한 칸뿐만 아니라 1칸을 아예 뛰어넘어 배치 가능한 '외딴 전술 요충지'들이 격전판에 동시 활성화됩니다.</div>
       </div>
@@ -375,7 +401,12 @@ html,body {
 
 <!-- ③ 대화 화면 -->
 <div id="s-dlg" class="screen">
-  <div class="dlg-hdr">── 패권 선언 ──</div>
+  <!-- 2. 상단 '패권 선언'을 고급 현판 스타일로 변경 완료 -->
+  <div class="dlg-hdr-wrap">
+    <div class="dlg-emblem">
+      <div class="dlg-emblem-text">패권 선언</div>
+    </div>
+  </div>
   <div class="dlg-fullscreen-body">
     <div class="dlg-side-char" id="dc-L">
       <img id="dc-L-img" src="" alt="">
@@ -413,6 +444,7 @@ html,body {
   </div>
   
   <div class="g-main-wrapper">
+    <!-- 3. 대폭 넓어진 왼쪽 국가 정보 판 -->
     <div class="g-side-profile" id="g-prof-L">
       <img id="g-prof-img-L" src="" alt="">
       <div class="g-profile-name" id="g-prof-name-L"></div>
@@ -423,6 +455,7 @@ html,body {
       <div id="g-grid"></div>
     </div>
 
+    <!-- 3. 대폭 넓어진 오른쪽 국가 정보 판 -->
     <div class="g-side-profile" id="g-prof-R">
       <img id="g-prof-img-R" src="" alt="">
       <div class="g-profile-name" id="g-prof-name-R"></div>
@@ -433,7 +466,6 @@ html,body {
   <div class="g-footer">
     <div class="g-hint" id="g-hint-text">빛나는 진군 경로 중 한 곳을 점령하십시오.</div>
     <div class="g-btn-group">
-      <!-- 2. 버튼 내 (0.2s) 글자 삭제 완료 -->
       <button class="g-btn g-foot-btn" id="btn-auto-play" onclick="btnSfx();startAutoPlay()">자동입력 번개배치</button>
       <button class="g-btn g-foot-btn red" id="btn-early-end" onclick="btnSfx();endEarly()">반정 회군 (현재 계산 종료)</button>
     </div>
@@ -462,7 +494,7 @@ const KD = {
     img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
     wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
           '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'],
-    drawSpeech: '고구려의 철기군과 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
+    drawSpeech: '고구려의 철기군 and 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
   baekje:  { id:'baekje',   name:'백제',   king:'온조왕', desc:'해상 담로 개척 (15% 확률로 1칸 건너 원격기지 활성화)',
     img:'image/온조왕.png', color:'#145c2a', accent:'#2ecc71',
     wins:['백제의 위대함이 오늘 다시 한번 증명되었도다!',
@@ -795,7 +827,6 @@ function drawUI(){
   document.getElementById('g-prof-R').classList.toggle('active-turn', turn===1);
 }
 
-// 3. 자동 번개 배치 속도를 0.1초(100ms)로 증속 완료
 function startAutoPlay() {
   if(autoInterval) return;
   document.getElementById('btn-auto-play').disabled = true;
