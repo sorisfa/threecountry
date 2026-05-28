@@ -2,399 +2,406 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>삼국지 땅따먹기 : 영웅의 도래 ver 9.88</title>
+<title>삼국지 땅따먹기</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;800;900&display=swap');
-
 * { margin:0; padding:0; box-sizing:border-box; }
-html,body { 
-  width:100%; height:100%; overflow:hidden; background:#050300; 
-  font-family:'Noto Serif KR', '궁서', 'Gungsuh', serif; 
-  -webkit-user-select:none; user-select:none;
-}
+html,body { width:100%; height:100%; overflow:hidden; background:#000; font-family:'Georgia',serif; }
 
 .screen { position:absolute; inset:0; display:none; }
 .screen.active { display:flex; }
 
-/* 황금빛 프리미엄 버튼 */
-.g-btn {
-  background: linear-gradient(180deg, #4a2d11 0%, #261504 100%);
-  border: 3px solid #d4af37;
-  border-radius: 8px;
-  color: #fffde6;
-  font-family: 'Noto Serif KR', serif;
-  font-weight: 900;
-  text-align: center;
-  cursor: pointer;
-  letter-spacing: 3px;
-  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.25), 0 6px 14px rgba(0,0,0,0.8);
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.g-btn:hover:not(:disabled) {
-  background: linear-gradient(180deg, #613c18 0%, #361f07 100%);
-  border-color: #ffffff;
-  color: #ffffff;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 10px 20px rgba(212,175,55,0.5);
-}
-.g-btn:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: inset 0 3px 6px rgba(0,0,0,0.9);
-}
-.g-btn:disabled {
-  background: #252525 !important;
-  border-color: #444444 !important;
-  color: #666666 !important;
-  text-shadow: none !important;
-  box-shadow: none !important;
-  cursor: not-allowed;
-}
-.g-btn.red {
-  background: linear-gradient(180deg, #6e1818 0%, #3b0b0b 100%);
-  border-color: #ff5555;
-  color: #fff0f0;
-}
-.g-btn.red:hover {
-  background: linear-gradient(180deg, #8f2323 0%, #521111 100%);
-  border-color: #ff9999;
-}
-
-/* 타이틀 화면 (image/ 폴더 내부 초기화면.png 지정) */
+/* ── ① 타이틀 ── */
 #s-title {
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('image/초기화면.png') no-repeat center center;
-  background-size: cover;
-  flex-direction:column; align-items:center; justify-content:center; gap:30px;
+  background:url('image/초기화면.png') center/cover no-repeat;
+  flex-direction:column; align-items:center; justify-content:flex-end;
+  padding-bottom:8%;
+  position: relative;
 }
-.t-main-title { color: #d4af37; font-size: 45px; font-weight: 900; text-shadow: 0 0 25px rgba(0,0,0,1), 0 0 15px rgba(212,175,55,0.6); letter-spacing: 4px; }
-.t-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; border: 1px solid rgba(212,175,55,0.3); }
-.t-btn-main { width:320px; padding:22px 0; font-size:28px; }
-.t-row { display:flex; gap:20px; }
-.t-btn-sub { width:150px; padding:14px 0; font-size:17px; }
-.v-text { color: #ffeb3b; font-size: 15px; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
+.t-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
+.t-btn {
+  width:230px; padding:14px 0; font-size:20px; font-family:'Georgia',serif;
+  font-weight:bold; color:#d4af37; text-align:center; cursor:pointer;
+  background:rgba(8,4,0,0.85); border:2px solid #d4af37; border-radius:4px;
+  letter-spacing:3px; transition:all 0.2s;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+.t-btn:hover { background:rgba(212,175,55,0.2); transform:scale(1.04); border-color:#fff; color:#fff; }
+.t-btn.red  { color:#ff7777; border-color:#cc4444; }
+.t-btn.red:hover { background:rgba(200,60,60,0.2); border-color:#ff9999; color:#ff9999; }
+.t-row { display:flex; gap:14px; }
+.t-row .t-btn { width:140px; font-size:15px; padding:10px 0; letter-spacing:2px; }
+.v-mark { position:absolute; right:20px; bottom:20px; color:rgba(212,175,55,0.6); font-size:14px; font-weight:bold; letter-spacing:1px; }
 
-/* 모달 */
+/* ── 국가 특성 도감 모달 ── */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.85);
   display: none; align-items: center; justify-content: center; z-index: 100;
 }
 .modal-overlay.active { display: flex; }
 .modal-box {
-  background: linear-gradient(145deg, #1c1208, #0a0602);
-  border: 3px solid #d4af37; border-radius: 16px;
-  width: 85%; max-width: 850px; padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-  display: flex; flex-direction: column; gap: 25px; position: relative;
+  background: linear-gradient(145deg, #1a1005, #050301);
+  border: 2px solid #d4af37; border-radius: 12px;
+  width: 90%; max-width: 750px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+  display: flex; flex-direction: column; gap: 20px;
 }
-.modal-head { font-size: 30px; font-weight: 900; color: #d4af37; text-align: center; letter-spacing: 2px; }
-.modal-body { display: flex; gap: 20px; justify-content: center; }
-.modal-close { width: 180px; padding: 12px 0; font-size: 18px; align-self: center; }
-
+.modal-head { font-size: 22px; font-weight: bold; color: #d4af37; text-align: center; letter-spacing: 2px; }
+.modal-body { display: flex; gap: 15px; justify-content: center; }
+.modal-close { width: 160px; padding: 10px 0; font-size: 15px; align-self: center; background:rgba(8,4,0,0.8); color:#d4af37; border:1px solid #d4af37; cursor:pointer; font-weight:bold; border-radius:4px; }
+.modal-close:hover { background:rgba(212,175,55,0.2); color:#fff; }
 .info-card {
-  flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
-  border-radius: 10px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center;
+  flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 8px; padding: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap:8px;
 }
-.info-name { font-size: 19px; font-weight: 900; margin-bottom: 5px; }
-.info-skill { font-size: 15px; color: #ffeb3b; font-weight: 800; margin-bottom: 8px; }
-.info-desc { font-size: 13px; color: #e5dec9; line-height: 1.5; word-break: keep-all; }
+.info-prof { width:70px; height:85px; object-fit:cover; border-radius:6px; border:1px solid rgba(212,175,55,0.4); }
+.info-name { font-size: 15px; font-weight: bold; }
+.info-skill { font-size: 12px; color: #ffeb3b; font-weight: bold; }
+.info-desc { font-size: 11px; color: #ccc; line-height: 1.5; word-break: keep-all; }
 
-.map-card {
-  width: 220px; background: rgba(0,0,0,0.6); border: 2px solid rgba(212,175,55,0.3);
-  border-radius: 12px; padding: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: all 0.2s;
+/* ── ② 나라 선택 ── */
+#s-sel {
+  flex-direction:column; align-items:center;
+  background:linear-gradient(160deg,#060300,#130d00);
 }
-.map-card:hover { border-color: #fff; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
-.map-icon { font-size: 45px; margin-bottom: 10px; }
-.map-name { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 6px; }
-.map-desc { font-size: 13px; color: #ccc; text-align: center; line-height: 1.4; word-break: keep-all; }
-
-/* 나라 선택 */
-#s-sel { flex-direction:column; align-items:center; justify-content: center; background: #0b0702; }
-.sel-content { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 45px; }
-.sel-title { color:#fff; font-size:38px; font-weight:900; letter-spacing:4px; text-shadow: 0 0 20px rgba(212,175,55,1); }
-.k-row { display:flex; gap:35px; justify-content:center; }
+.sel-banner { width:100%; max-height:45%; object-fit:cover; object-position:top center; }
+.sel-bottom {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:16px; padding:10px 16px;
+}
+.sel-title { color:#d4af37; font-size:18px; letter-spacing:2px; font-weight:bold; }
+.k-row { display:flex; gap:20px; }
 .k-card {
-  width:210px; border-radius:12px; padding: 20px; cursor:pointer;
-  border:3px solid rgba(255,255,255,0.2); transition:all 0.25s;
-  background:rgba(22,14,5,0.85); box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-  text-align: center;
+  width:125px; border-radius:8px; overflow:hidden; cursor:pointer;
+  border:2px solid rgba(255,255,255,0.12); transition:all 0.25s;
+  background:rgba(255,255,255,0.04);
 }
-.k-card .kn { color:#fff; font-size:22px; font-weight:800; margin-bottom: 10px; }
-.k-card .kd { color:#ccc; font-size:13px; line-height:1.4; }
-.k-card.on { border-color:#d4af37; box-shadow:0 0 35px rgba(212,175,55,1); transform: scale(1.06); }
-.k-card.off { opacity:0.2; cursor:not-allowed; transform: scale(0.95); }
-.sel-btn-ok { width: 300px; padding: 18px 0; font-size: 26px; }
+.k-card img { width:100%; height:145px; object-fit:cover; display:block; }
+.k-card .kn {
+  color:rgba(255,255,255,0.8); text-align:center;
+  font-size:12px; padding:6px 4px; background:rgba(0,0,0,0.75); font-weight:bold;
+}
+.k-card.on { border-color:#d4af37; box-shadow:0 0 18px rgba(212,175,55,0.55); transform:scale(1.04); }
+.k-card.off { opacity:0.25; cursor:not-allowed; }
+.sel-btn {
+  padding:12px 42px; font-size:17px; border-radius:6px; border:none;
+  font-family:'Georgia',serif; font-weight:bold; cursor:pointer;
+  background:linear-gradient(135deg,#d4af37,#b8960c); color:#1a0800;
+  transition:transform 0.15s;
+}
+.sel-btn:hover:not(:disabled) { transform:scale(1.05); }
+.sel-btn:disabled { background:#2a2a2a; color:#555; cursor:not-allowed; }
 
-/* 대화 화면 */
-#s-dlg { background: #0a0500; flex-direction: column; justify-content: space-between; }
-.dlg-hdr { color: #d4af37; font-size: 26px; font-weight: 900; text-align: center; padding: 25px 0; border-bottom: 2px solid rgba(212,175,55,0.5); }
-.dlg-fullscreen-body { flex: 1; width: 100%; display: flex; justify-content: space-around; align-items: center; padding: 0 5%; }
-.dlg-side-char { width: 35%; background: rgba(33, 20, 7, 0.6); border: 2px solid rgba(212,175,55,0.2); border-radius: 12px; padding: 20px; transition: all 0.3s; opacity: 0.2; text-align: center; }
-.dlg-side-char.act { opacity: 1; border-color: #d4af37; box-shadow: 0 0 25px rgba(212,175,55,0.3); background: rgba(33, 20, 7, 0.95); }
-.dlg-img { width: 100%; max-height: 260px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: rgba(0,0,0,0.3); }
-.dlg-side-bubble { color: #ffffff; font-size: 20px; font-weight:800; line-height: 1.6; text-align: center; min-height: 70px; }
-.dlg-foot { width: 100%; display: flex; justify-content: center; padding: 25px 0; border-top: 2px solid rgba(212,175,55,0.4); }
-.dlg-next { width: 280px; padding: 16px 0; font-size: 22px; }
-
-/* 게임 화면 */
-#s-game { background: #090603; flex-direction: column; align-items: center; justify-content: space-between; padding: 20px; gap: 10px; }
-.g-header { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.g-title { color:#d4af37; font-size:30px; font-weight:900; letter-spacing: 2px; }
-.g-scorebar { width:100%; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 10px; border: 2px solid rgba(212,175,55,0.2); }
-.g-slbls { display:flex; justify-content:space-between; font-size:20px; font-weight: 800; margin-bottom:6px; }
-.g-track { height:16px; background:rgba(255,255,255,0.06); border-radius:8px; overflow:hidden; position:relative; border: 1px solid rgba(212,175,55,0.4); }
-.g-fill  { position:absolute; top:0; height:100%; transition:width 0.3s ease; }
-.g-turn  { padding:8px 35px; border-radius:25px; font-size:18px; font-weight:900; margin-top: 4px; text-align: center;}
-
-.g-main-wrapper { flex: 1; width: 100%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
-.g-side-profile { width: 230px; height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: rgba(0,0,0,0.55); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 15px; gap:10px; }
-.g-prof-img { width: 100%; height: 180px; object-fit: contain; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.1); }
-.g-profile-name { text-align: center; color: #fff; font-size: 20px; font-weight: 800; }
-.g-profile-skill { font-size: 13px; color: #ffeb3b; text-align: center; line-height: 1.4; word-break: keep-all; }
-.g-side-profile.active-turn { border-color: #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.5); background: rgba(54,34,14,0.4); }
-
-.g-grid-container { display: flex; align-items: center; justify-content: center; }
-#g-grid  { display:grid; gap:6px; padding:12px; background:rgba(5,3,1,0.94); border-radius:14px; border:3px solid rgba(212,175,55,0.45); }
-.cell { width:min(5.5vh, 5.5vw); height:min(5.5vh, 5.5vw); border-radius:6px; transition: all 0.15s ease; position: relative;}
-
-/* 하이라이트 활성화 타일 애니메이션 */
-.cell.hi { cursor:pointer; animation: pulseGlow 1.0s infinite alternate !important; border: 2px solid #ffffff !important; z-index: 5; }
-@keyframes pulseGlow {
-  from { transform: scale(0.95); filter: brightness(0.9); box-shadow: 0 0 8px rgba(255,255,255,0.5); }
-  to { transform: scale(1.05); filter: brightness(1.4); box-shadow: 0 0 22px #ffffff, inset 0 0 10px rgba(255,255,255,0.8); }
+/* ── ③ 대화 ── */
+#s-dlg {
+  background:linear-gradient(160deg,#050200,#110c00);
+  flex-direction:column; align-items:center; padding:16px 12px 14px; gap:0;
+}
+.dlg-hdr { color:rgba(212,175,55,0.5); font-size:12px; letter-spacing:5px; margin-bottom:14px; }
+.dlg-body { flex:1; width:100%; max-width:720px; display:flex; gap:10px; align-items:flex-start; }
+.dlg-char {
+  width:155px; flex-shrink:0; text-align:center;
+  transition:all 0.35s; opacity:0.35; transform:scale(0.92);
+}
+.dlg-char img {
+  width:148px; height:185px; object-fit:cover; border-radius:8px;
+  border:3px solid transparent; transition:border-color 0.35s, box-shadow 0.35s;
+}
+.dlg-char .dcn { font-size:11px; font-weight:bold; margin-top:5px; transition:color 0.3s; }
+.dlg-char.act { opacity:1; transform:scale(1.04); }
+.dlg-char.act img { border-color:#d4af37; box-shadow:0 0 18px rgba(212,175,55,0.5); }
+.dlg-mid {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding-top:20px; gap:10px;
+}
+.dlg-bubble {
+  width:100%; background:rgba(255,255,255,0.05);
+  border:1px solid rgba(212,175,55,0.28); border-radius:12px;
+  padding:16px 14px; text-align:center; min-height:90px;
+  color:rgba(255,255,255,0.88); font-size:14px; line-height:1.8;
+  transition:border-color 0.3s;
+}
+.dlg-dots { display:flex; gap:6px; }
+.dlg-dots span {
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(255,255,255,0.16); transition:background 0.3s;
+}
+.dlg-dots span.done { background:#d4af37; }
+.dlg-foot { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:12px; }
+.dlg-next {
+  padding:10px 30px; font-size:15px; border-radius:7px; border:none;
+  font-family:'Georgia',serif; font-weight:bold; cursor:pointer;
+  background:linear-gradient(135deg,#d4af37,#b8960c); color:#1a0800;
 }
 
-/* 신라 10턴 주기 강탈 타겟팅 이펙트 */
-.cell.hi.steal-target {
-  animation: stealGlow 0.8s infinite alternate !important;
+/* ── ④ 게임 ── */
+#s-game {
+  background:linear-gradient(160deg,#0a0600,#1a1000);
+  flex-direction:column; align-items:center; justify-content:center;
+  gap:8px; padding:10px;
 }
-@keyframes stealGlow {
-  from { transform: scale(0.95); filter: brightness(0.9); box-shadow: 0 0 10px #ff3333; }
-  to { transform: scale(1.06); filter: brightness(1.5); box-shadow: 0 0 25px #ff3333, inset 0 0 12px #ff3333; border-color: #ff9999 !important; }
+.g-title { color:#d4af37; font-size:16px; font-weight:bold; }
+.g-scorebar { width:100%; max-width:420px; }
+.g-slbls { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+.g-track { height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; position:relative; }
+.g-fill  { position:absolute; top:0; height:100%; transition:width 0.3s; }
+.g-turn  { padding:5px 16px; border-radius:14px; font-size:12px; font-weight:bold; }
+#g-grid  {
+  display:grid; gap:2px; padding:8px;
+  background:rgba(0,0,0,0.65); border-radius:8px;
+  border:1px solid rgba(212,175,55,0.12);
+}
+.cell { width:34px; height:34px; border-radius:3px; transition:background 0.12s; }
+.cell.hi { cursor:pointer; }
+.g-hint { color:rgba(255,255,255,0.2); font-size:10px; }
+.g-end {
+  padding:6px 18px; font-size:11px; background:transparent;
+  border:1px solid rgba(212,175,55,0.22); color:rgba(212,175,55,0.45);
+  border-radius:6px; cursor:pointer; font-family:'Georgia',serif;
 }
 
-.g-footer { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.g-hint { color:#ffeb3b; font-size:17px; font-weight: 800; letter-spacing: 1px; min-height: 24px; text-shadow: 0 2px 4px #000; }
-.g-btn-group { display: flex; gap: 18px; }
-.g-foot-btn { padding: 12px 30px; font-size: 17px; }
+/* ── ⑤ 정산 ── */
+#s-win {
+  background:radial-gradient(ellipse at 50% 30%, #1c1200, #060300);
+  flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; padding:20px;
+}
+.w-trophy { font-size:48px; animation:popIn 0.6s ease both; }
+.w-title  { font-size:26px; font-weight:bold; animation:popIn 0.8s 0.1s ease both; text-shadow:0 0 24px currentColor; }
 
-/* 정산 화면 */
-#s-win { background: radial-gradient(circle, #3d2508 0%, #050300 100%); flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
-.w-title { font-size: 44px; font-weight: 900; text-shadow: 0 0 20px #d4af37; color:#d4af37; }
-.w-scores { display: flex; gap: 50px; background: rgba(0,0,0,0.4); padding: 20px 35px; border-radius: 14px; border: 1px solid rgba(212,175,55,0.2); }
-.w-sc { text-align: center; }
-.w-sc-name { font-size: 22px; font-weight: 800; margin-bottom: 5px; }
-.w-sc-val { font-size: 48px; font-weight: 900; }
-.reset-btn { width: 280px; padding: 18px 0; font-size: 22px; }
+/* 무승부/단독 이미지 복합 컨테이너 배치 */
+.w-img-box { display:flex; gap:16px; justify-content:center; align-items:center; animation:popIn 1s 0.2s ease both; }
+.w-img    {
+  width:160px; height:200px; object-fit:cover; border-radius:10px;
+  border:3px solid #d4af37; box-shadow:0 0 32px rgba(212,175,55,0.4);
+}
+.w-speech {
+  color:rgba(255,255,255,0.85); font-size:14px; text-align:center;
+  max-width:400px; line-height:1.8; font-style:italic; min-height:48px;
+  background:rgba(255,255,255,0.03); padding:10px 16px; border-radius:8px;
+  border:1px solid rgba(212,175,55,0.15);
+}
+.w-scores { display:flex; gap:38px; }
+.w-sc { text-align:center; }
+.reset-btn {
+  padding:11px 30px; font-size:15px; border-radius:8px; border:none;
+  font-family:'Georgia',serif; font-weight:bold; cursor:pointer;
+  background:linear-gradient(135deg,#d4af37,#b8960c); color:#1a0800;
+}
+
+@keyframes popIn {
+  from { transform:scale(0.3); opacity:0; }
+  to   { transform:scale(1);   opacity:1; }
+}
 </style>
 </head>
 <body>
 
-<!-- 타이틀 화면 -->
 <div id="s-title" class="screen active">
-  <div class="t-main-title">⚔️ 삼국 지재권 영토전</div>
   <div class="t-wrap">
-    <button class="g-btn t-btn-main" onclick="btnSfx();goSelect()">천하통일 시작</button>
+    <button class="t-btn" onclick="btnSfx();goSelect()">천하통일 시작</button>
     <div class="t-row">
-      <button class="g-btn t-btn-sub" onclick="btnSfx();openSkillModal()">국가 특성</button>
-      <button class="g-btn t-btn-sub" onclick="btnSfx();openMapModal()">전장 선택</button>
+      <button class="t-btn" onclick="btnSfx();openModal()">국가 특성</button>
+      <button class="t-btn" onclick="btnSfx()">스토리 모드</button>
     </div>
-    <div class="v-text">ver 9.88 (신라 밸런스 조정 및 image/ 폴더 경로 지정 버전)</div>
+    <button class="t-btn red" onclick="btnSfx();exitGame()">종료</button>
   </div>
+  <div class="v-mark">ver 9.89</div>
 </div>
 
-<!-- [모달 1] 국가 특성 설명 -->
-<div id="m-skill" class="modal-overlay" onclick="closeSkillModal()">
+<div id="m-desc" class="modal-overlay" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-head">📜 삼한 고유 패시브 활성화 조건</div>
+    <div class="modal-head">📜 영웅 고유 자산 설명 도감</div>
     <div class="modal-body">
-      <div class="info-card" style="border-color:#e74c3c">
-        <div class="info-name" style="color:#e74c3c">고구려 (주몽)</div>
-        <div class="info-skill">기사의 강습 (대각 확장)</div>
-        <div class="info-desc">3의 배수 정벌 턴마다 발동. 기존 상하좌우 외에 대각선 4방향의 빈칸까지 선택 가능한 돌로 하이라이트 활성화됩니다.</div>
+      <div class="info-card">
+        <img src="image/주몽.png" class="info-prof" alt="주몽">
+        <div class="info-name" style="color:#e74c3c">고구려 · 주몽</div>
+        <div class="info-skill">대륙의 기상 (종대 확장)</div>
+        <div class="info-desc">광활한 만주 대륙을 달리던 기세로 수직 축 거점 점령에 보너스 어드밴티지를 획득합니다.</div>
       </div>
-      <div class="info-card" style="border-color:#2ecc71">
-        <div class="info-name" style="color:#2ecc71">백제 (온조왕)</div>
-        <div class="info-skill">해상 담로 개척 (원격 기지)</div>
-        <div class="info-desc">매 턴 시작 시 15% 확률로 기습 활로 개척. 인접지 외에 1칸을 아예 건너뛴 원격 빈칸들이 선택 가능한 돌로 동시 활성화됩니다.</div>
+      <div class="info-card">
+        <img src="image/온조왕.png" class="info-prof" alt="온조왕">
+        <div class="info-name" style="color:#2ecc71">백제 · 온조왕</div>
+        <div class="info-skill">해상 무역 개척 (횡대 개간)</div>
+        <div class="info-desc">한강 유역과 바닷길을 아우르던 전술로 수평 축 영토 전개 시 뛰어난 공간 장악력을 보여줍니다.</div>
       </div>
-      <div class="info-card" style="border-color:#60a5fa">
-        <div class="info-name" style="color:#60a5fa">신라 (박혁거세)</div>
-        <div class="info-skill">정예 화랑 출격 (적 돌 강탈)</div>
-        <div class="info-desc"><span style="color:#ffeb3b; font-weight:bold;">10의 배수 정벌 턴(10, 20, 30...)에만 발동!</span> 내 영토와 인접한 적의 돌을 타겟팅하여 클릭 시 즉시 신라의 영토로 포섭합니다.</div>
+      <div class="info-card">
+        <img src="image/박혁거세.png" class="info-prof" alt="박혁거세">
+        <div class="info-name" style="color:#60a5fa">신라 · 박혁거세</div>
+        <div class="info-skill">황금알의 결속 (사선 방어)</div>
+        <div class="info-desc">경주 분지를 중심 삼아 결속하던 대각선 방어망으로 상대의 침투 전략을 효과적으로 봉쇄합니다.</div>
       </div>
     </div>
-    <button class="g-btn modal-close" onclick="closeSkillModal()">도감 닫기</button>
+    <button class="modal-close" onclick="closeModal()">도감 닫기</button>
   </div>
 </div>
 
-<!-- [모달 2] 맵 선택 -->
-<div id="m-map" class="modal-overlay" onclick="closeMapModal()">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-head">🗺️ 원정 전장 지형 선택</div>
-    <div class="modal-body">
-      <div class="map-card" onclick="selectMap('mountain')">
-        <div class="map-icon">⛰️</div>
-        <div class="map-name">험준한 산맥</div>
-        <div class="map-desc">중앙 요충지에 5개의 통행 불가 바위산이 배치됩니다.</div>
-      </div>
-      <div class="map-card" onclick="selectMap('cross')">
-        <div class="map-icon">⚔️</div>
-        <div class="map-name">십자형 전장</div>
-        <div class="map-desc">네 군데 모서리가 절벽으로 잘려나가 전면전이 유도됩니다.</div>
-      </div>
-    </div>
-    <button class="g-btn modal-close" onclick="closeMapModal()">돌아가기</button>
-  </div>
-</div>
-
-<!-- 나라 선택 -->
 <div id="s-sel" class="screen">
-  <div class="sel-content">
-    <div class="sel-title">⚔️ 격돌할 두 국가를 선택하라</div>
+  <img class="sel-banner" src="image/세 왕.png" alt="세 왕">
+  <div class="sel-bottom">
+    <div class="sel-title">⚔️ 격돌할 두 국가를 선택하세요</div>
     <div class="k-row">
       <div class="k-card" id="kc-goguryeo" onclick="toggleK('goguryeo')">
-        <div class="kn" style="color:#e74c3c">고구려</div>
-        <div class="kd">3턴마다 대각선 빈칸 확장 돌 활성화</div>
+        <img src="image/주몽.png" alt="주몽">
+        <div class="kn">고구려 · 주몽</div>
       </div>
       <div class="k-card" id="kc-baekje" onclick="toggleK('baekje')">
-        <div class="kn" style="color:#2ecc71">백제</div>
-        <div class="kd">15% 확률로 1칸 건너 원격 배치 돌 활성화</div>
+        <img src="image/온조왕.png" alt="온조왕">
+        <div class="kn">백제 · 온조왕</div>
       </div>
       <div class="k-card" id="kc-silla" onclick="toggleK('silla')">
-        <div class="kn" style="color:#60a5fa">신라</div>
-        <div class="kd">10턴마다 인접한 적 세력의 돌 강탈 활성화</div>
+        <img src="image/박혁거세.png" alt="박혁거세">
+        <div class="kn">신라 · 박혁거세</div>
       </div>
     </div>
-    <button class="g-btn sel-btn-ok" id="sel-ok" disabled onclick="btnSfx();confirmSel()">진군 개시 ⚔️</button>
+    <button class="sel-btn" id="sel-ok" disabled onclick="btnSfx();confirmSel()">대결 시작! ⚔️</button>
   </div>
 </div>
 
-<!-- 대화 화면 -->
 <div id="s-dlg" class="screen">
-  <div class="dlg-hdr">── 패권 선언 ──</div>
-  <div class="dlg-fullscreen-body">
-    <div class="dlg-side-char" id="dc-L">
-      <img src="" id="dlg-img-L" class="dlg-img" alt="군주 초상화">
-      <div class="dlg-side-bubble" id="dlg-bbl-L"></div>
+  <div class="dlg-hdr">── 왕들의 만남 ──</div>
+  <div class="dlg-body">
+    <div class="dlg-char" id="dc-L">
+      <img id="dc-L-img" src="" alt="">
+      <div class="dcn" id="dc-L-nm"></div>
     </div>
-    <div class="dlg-side-char" id="dc-R">
-      <img src="" id="dlg-img-R" class="dlg-img" alt="군주 초상화">
-      <div class="dlg-side-bubble" id="dlg-bbl-R"></div>
+    <div class="dlg-mid">
+      <div class="dlg-bubble" id="dlg-bbl"></div>
+      <div class="dlg-dots"   id="dlg-dots"></div>
+    </div>
+    <div class="dlg-char" id="dc-R">
+      <img id="dc-R-img" src="" alt="">
+      <div class="dcn" id="dc-R-nm"></div>
     </div>
   </div>
   <div class="dlg-foot">
-    <button class="g-btn dlg-next" id="dlg-nxt" onclick="btnSfx();advDlg()">다음 장문 ▶</button>
+    <button class="dlg-next" id="dlg-nxt" onclick="btnSfx();advDlg()">다음 ▶</button>
   </div>
 </div>
 
-<!-- 게임 본 화면 -->
 <div id="s-game" class="screen">
-  <div class="g-header">
-    <div class="g-title">⚔️ 삼국 영토 쟁탈 격전판 (ver 9.88)</div>
-    <div class="g-scorebar">
-      <div class="g-slbls">
-        <span id="gl-L"></span>
-        <span id="gl-P" style="color:#d4af37;"></span>
-        <span id="gl-R"></span>
-      </div>
-      <div class="g-track">
-        <div class="g-fill" id="gf-L" style="left:0"></div>
-        <div class="g-fill" id="gf-R" style="right:0"></div>
-      </div>
+  <div class="g-title">⚔️ 삼국 땅따먹기</div>
+  <div class="g-scorebar">
+    <div class="g-slbls">
+      <span id="gl-L"></span>
+      <span id="gl-P" style="color:rgba(255,255,255,0.28);font-size:10px"></span>
+      <span id="gl-R"></span>
     </div>
-    <div class="g-turn" id="g-turn"></div>
-  </div>
-  
-  <div class="g-main-wrapper">
-    <div class="g-side-profile" id="g-prof-L">
-      <img src="" id="g-prof-img-L" class="g-prof-img" alt="초상화">
-      <div class="g-profile-name" id="g-prof-name-L"></div>
-      <div class="g-profile-skill" id="g-prof-skill-L"></div>
-    </div>
-
-    <div class="g-grid-container">
-      <div id="g-grid"></div>
-    </div>
-
-    <div class="g-side-profile" id="g-prof-R">
-      <img src="" id="g-prof-img-R" class="g-prof-img" alt="초상화">
-      <div class="g-profile-name" id="g-prof-name-R"></div>
-      <div class="g-profile-skill" id="g-prof-skill-R"></div>
+    <div class="g-track">
+      <div class="g-fill" id="gf-L" style="left:0"></div>
+      <div class="g-fill" id="gf-R" style="right:0"></div>
     </div>
   </div>
-  
-  <div class="g-footer">
-    <div class="g-hint" id="g-hint-text">빛나는 타일(선택 가능한 돌)을 클릭하여 점령하십시오.</div>
-    <div class="g-btn-group">
-      <button class="g-btn g-foot-btn" id="btn-auto-play" onclick="btnSfx();startAutoPlay()">자동 번개배치</button>
-      <button class="g-btn g-foot-btn red" onclick="btnSfx();endEarly()">계산 종료</button>
-    </div>
-  </div>
+  <div class="g-turn" id="g-turn"></div>
+  <div id="g-grid"></div>
+  <div class="g-hint">빛나는 칸을 눌러 영토를 확장하세요</div>
+  <button class="g-end" onclick="btnSfx();endEarly()">게임 종료 (현재 점수로)</button>
 </div>
 
-<!-- 승리 정산 -->
 <div id="s-win" class="screen">
-  <div class="w-title" id="w-title"></div>
-  <div class="w-scores" id="w-scores"></div>
-  <button class="g-btn reset-btn" onclick="btnSfx();resetAll()">새로운 정벌</button>
+  <div class="w-trophy" id="w-trophy">🏆</div>
+  <div class="w-title"  id="w-title"></div>
+  <div class="w-img-box" id="w-img-box"></div>
+  <div  class="w-speech" id="w-speech"></div>
+  <div  class="w-scores" id="w-scores"></div>
+  <button class="reset-btn" onclick="btnSfx();resetAll()">다시 하기</button>
 </div>
+
+<audio id="aud-bgm" src="audio/배경음악.mp3" loop preload="auto"></audio>
+<audio id="aud-win" src="audio/승리.mp3"     preload="auto"></audio>
 
 <script>
-/* 📁 이미지 경로를 'image/파일명' 형태로 일괄 업데이트 */
+/* ═══════════ 데이터 백엔드 ═══════════ */
 const KD = {
-  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', img:'image/주몽.png', desc:'기사의 강습 (3턴마다 대각선 빈 영지 활성화)', color:'#6b1414', accent:'#e74c3c' },
-  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', img:'image/온조왕.png', desc:'해상 담로 개척 (15% 확률 원격 도약지 활성화)', color:'#145c2a', accent:'#2ecc71' },
-  silla:   { id:'silla',    name:'신라',   king:'박혁거세', img:'image/박혁거세.png', desc:'정예 화랑 출격 (10의 배수 턴에만 접경 적 돌 강탈 활성화)', color:'#1a3a8a', accent:'#60a5fa' },
+  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽',
+    img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
+    wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
+          '하늘이 나를 왕으로 삼았으니, 이 대륙의 승리는 당연한 역사적 귀결이다!'] },
+  baekje:  { id:'baekje',   name:'백제',   king:'온조왕',
+    img:'image/온조왕.png', color:'#145c2a', accent:'#2ecc71',
+    wins:['백제의 해상 기술과 위대함이 오늘 다시 한번 정점에 올랐도다!',
+          '한강의 드넓은 물줄기처럼, 대백제의 영토는 온 바다와 땅을 뒤덮으리라!'] },
+  silla:   { id:'silla',    name:'신라',   king:'박혁거세',
+    img:'image/박혁거세.png', color:'#1a3a8a', accent:'#60a5fa',
+    wins:['하늘의 거룩한 고귀함이 이미 정해졌노라. 신라의 빛이 온 삼한을 비추리라!',
+          '나는 신성한 알에서 깨어났으되, 마침내 천하를 통일한 유일한 성왕으로 서리라!'] },
 };
 
 const SCRIPTS = {
   'baekje-goguryeo':[
-    {k:'goguryeo', t:'고구려의 광활한 대륙 기상을 당해낼 수 있겠느냐!'},
-    {k:'baekje',   t:'바다와 강을 건너는 백제의 전술로 받아치겠습니다.'}
+    {k:'goguryeo', t:'내 아들아! 백제를 세운 것은 장하나, 고구려의 땅을 넘보지 마라!'},
+    {k:'baekje',   t:'아버지... 아니, 이제 우리는 각자의 왕입니다. 누가 더 강한지 보여드리죠!'},
+    {k:'goguryeo', t:'기개는 가상하다. 허나 나의 활 솜씨를 당할 수 있겠느냐?'},
+    {k:'baekje',   t:'활보다는 전략입니다! 백제의 영토가 더 넓어질 것입니다!'},
+    {k:'goguryeo', t:'두고 보거라! 고구려의 영웅이 가만히 있을 것 같으냐!'},
+    {k:'baekje',   t:'시작해봅시다. 더 넓은 땅을 차지하는 자가 진정한 왕입니다!'},
   ],
   'goguryeo-silla':[
-    {k:'goguryeo', t:'신라의 세력은 아직 미약하거늘 감히 대적하려 드는가!'},
-    {k:'silla',    t:'화랑의 기상과 하늘의 뜻이 신라에 있으니 두렵지 않소.'}
+    {k:'goguryeo', t:'알에서 태어났다는 왕이 바로 너냐? 신비롭기는 하나…'},
+    {k:'silla',    t:'나 박혁거세는 하늘이 내린 왕! 고구려의 용맹함도 신라를 이기지 못하리!'},
+    {k:'goguryeo', t:'흥! 말만 번지르르하구나. 내 화살이 이 땅을 정복하리라!'},
+    {k:'silla',    t:'황금알의 기운이 이 땅을 지킬 것이오. 어디 해보시오!'},
+    {k:'goguryeo', t:'어디 한번 해보자! 고구려의 강인함을 보여주마!'},
+    {k:'silla',    t:'좋습니다! 땅따먹기로 승부를 가립시다!'},
   ],
   'baekje-silla':[
-    {k:'baekje', t:'문화와 해상 무역의 중심 백제가 이 땅의 주인이 될 것이오.'},
-    {k:'silla',  t:'단단한 결속력의 신라가 결국 최후의 승자가 될 것입니다.'}
+    {k:'baekje', t:'박혁거세, 신라는 아직 작은 나라. 이 비옥한 땅을 내게 양보하시오.'},
+    {k:'silla',  t:'온조왕, 감히! 하늘이 내린 신라의 영토를 누가 넘보겠소!'},
+    {k:'baekje', t:'한강의 힘이 얼마나 대단한지 보여주겠소!'},
+    {k:'silla',  t:'황금알의 기운이 신라를 지킬 것이오!'},
+    {k:'baekje', t:'더 많은 땅을 차지하는 자가 이 시대의 주인공이 되리라!'},
+    {k:'silla',  t:'받아들이겠소. 신라의 승리를 두 눈으로 확인하시오!'},
   ],
 };
 
-const G=10;
-const DIRS=[[-1,0],[1,0],[0,-1],[0,1]];
-const DIAG_DIRS=[[-1,-1],[-1,1],[1,-1],[1,1]];
-
+/* ═══════════ 게임 엔진 상태 변수 ═══════════ */
+const G=10, DIRS=[[-1,0],[1,0],[0,-1],[0,1]];
 let sel=[], k1=null, k2=null, script=[], si=0;
-let grid=[], turn=0, hi=new Set(), totalTurns=1;
-let autoInterval = null;
-let currentMapType = 'mountain'; 
+let grid=[], turn=0, hi=new Set();
 
+const bgm    = document.getElementById('aud-bgm');
+const winAud = document.getElementById('aud-win');
+
+/* 모달 열고 닫기 제어 스크립트 */
+function openModal() { document.getElementById('m-desc').classList.add('active'); }
+function closeModal() { document.getElementById('m-desc').classList.remove('active'); }
+
+/* 효과음 주파수 생성 */
 function btnSfx(){
   try {
     const ac=new(window.AudioContext||window.webkitAudioContext)();
-    [[880,0,0.15]].forEach(([hz,st,end])=>{
+    [[880,0,0.28],[660,0.14,0.48]].forEach(([hz,st,end])=>{
       const o=ac.createOscillator(), g=ac.createGain();
       o.connect(g); g.connect(ac.destination);
-      o.frequency.value=hz; g.gain.setValueAtTime(0.2, ac.currentTime);
+      o.frequency.value=hz; o.type='sine';
+      g.gain.setValueAtTime(st===0?0.28:0, ac.currentTime);
+      if(st>0) g.gain.setValueAtTime(0.28, ac.currentTime+st);
       g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+end);
       o.start(ac.currentTime+st); o.stop(ac.currentTime+end);
     });
   } catch(e){}
 }
 
+/* 화면 전환 */
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function openSkillModal() { document.getElementById('m-skill').classList.add('active'); }
-function closeSkillModal() { document.getElementById('m-skill').classList.remove('active'); }
-function openMapModal() { document.getElementById('m-map').classList.add('active'); }
-function closeMapModal() { document.getElementById('m-map').classList.remove('active'); }
+function goSelect(){
+  sel=[];
+  bgm.play().catch(()=>{});
+  document.querySelectorAll('.k-card').forEach(c=>c.classList.remove('on','off'));
+  document.getElementById('sel-ok').disabled=true;
+  show('s-sel');
+}
 
-function selectMap(type) { currentMapType = type; closeMapModal(); goSelect(); }
-function goSelect(){ sel=[]; document.querySelectorAll('.k-card').forEach(c=>c.classList.remove('on','off')); document.getElementById('sel-ok').disabled=true; show('s-sel'); }
+function exitGame(){
+  if(confirm('게임을 종료하시겠습니까?')){
+    bgm.pause();
+    try{ window.close(); }catch(e){}
+    document.body.innerHTML='<p style="color:#d4af37;text-align:center;margin-top:45vh;font-family:Georgia;font-size:18px">게임을 종료합니다.<br>창을 닫아주세요.</p>';
+  }
+}
 
 function toggleK(id){
   btnSfx();
@@ -413,27 +420,30 @@ function confirmSel(){
   k1=KD[sel[0]]; k2=KD[sel[1]];
   const key=[...sel].sort().join('-');
   script=SCRIPTS[key]||[]; si=0;
-  
-  // 대화창에 이미지 패스 정확히 연동
-  document.getElementById('dlg-img-L').src = k1.img;
-  document.getElementById('dlg-img-R').src = k2.img;
-  
+
+  document.getElementById('dc-L-img').src = k1.img;
+  document.getElementById('dc-L-nm').textContent  = k1.king+' ('+k1.name+')';
+  document.getElementById('dc-L-nm').style.color   = k1.accent;
+  document.getElementById('dc-R-img').src = k2.img;
+  document.getElementById('dc-R-nm').textContent  = k2.king+' ('+k2.name+')';
+  document.getElementById('dc-R-nm').style.color   = k2.accent;
+  document.getElementById('dlg-dots').innerHTML = script.map(()=>'<span></span>').join('');
   renderDlg();
   show('s-dlg');
 }
 
 function renderDlg(){
-  const ln=script[si]; const isL=(ln.k===sel[0]); const spk=isL?k1:k2;
+  const ln=script[si];
+  const isL=(ln.k===sel[0]);
+  const spk=isL?k1:k2;
   document.getElementById('dc-L').classList.toggle('act', isL);
   document.getElementById('dc-R').classList.toggle('act', !isL);
-  if(isL) {
-    document.getElementById('dlg-bbl-L').innerHTML = `<strong>【${spk.king}】</strong><br>${ln.t}`;
-    document.getElementById('dlg-bbl-R').innerHTML = '';
-  } else {
-    document.getElementById('dlg-bbl-R').innerHTML = `<strong>【${spk.king}】</strong><br>${ln.t}`;
-    document.getElementById('dlg-bbl-L').innerHTML = '';
-  }
-  document.getElementById('dlg-nxt').textContent=si>=script.length-1?'전장 진입':'다음 ▶';
+  document.getElementById('dlg-bbl').innerHTML=
+    `<span style="color:${spk.accent};font-size:11px;font-weight:bold;display:block;margin-bottom:6px">`+
+    `${spk.king} (${spk.name})</span>"${ln.t}"`;
+  const dots=document.getElementById('dlg-dots').children;
+  for(let i=0;i<dots.length;i++) dots[i].classList.toggle('done',i<=si);
+  document.getElementById('dlg-nxt').textContent=si>=script.length-1?'전투 시작! ⚔️':'다음 ▶';
 }
 
 function advDlg(){
@@ -442,244 +452,156 @@ function advDlg(){
 }
 
 function initGame(){
-  if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
   grid=Array(G).fill(null).map(()=>Array(G).fill(null));
-  totalTurns = 1; 
-  turn = 0;
-
-  if (currentMapType === 'mountain') {
-    [[4,4],[4,5],[5,4],[5,5],[3,5]].forEach(([r,c])=>grid[r][c]='mountain');
-  } else if (currentMapType === 'cross') {
-    for(let r=0; r<G; r++) for(let c=0; c<G; c++) {
-      if((r<2 && c<2) || (r<2 && c>7) || (r>7 && c<2) || (r>7 && c>7)) grid[r][c] = 'mountain';
-    }
-  }
-
-  // 초기 기지 배치
-  grid[0][0]=k1.id; grid[0][1]=k1.id; grid[1][0]=k1.id;
-  grid[G-1][G-1]=k2.id; grid[G-1][G-2]=k2.id; grid[G-2][G-1]=k2.id;
-  
-  // 게임판 프로필 이미지 및 텍스트 매칭
-  document.getElementById('g-prof-img-L').src = k1.img;
-  document.getElementById('g-prof-name-L').innerHTML = `<span style="color:${k1.accent}">${k1.name}</span><br>${k1.king}`;
-  document.getElementById('g-prof-skill-L').textContent = k1.desc;
-  
-  document.getElementById('g-prof-img-R').src = k2.img;
-  document.getElementById('g-prof-name-R').innerHTML = `<span style="color:${k2.accent}">${k2.name}</span><br>${k2.king}`;
-  document.getElementById('g-prof-skill-R').textContent = k2.desc;
-
-  hi = calculateHighlights(k1.id); 
-  drawGrid(); 
-  drawUI();
+  [[0,0],[0,1],[1,0],[1,1]].forEach(([r,c])=>grid[r][c]=k1.id);
+  [[G-2,G-2],[G-2,G-1],[G-1,G-2],[G-1,G-1]].forEach(([r,c])=>grid[r][c]=k2.id);
+  turn=0; hi=adjEmp(k1.id); drawGrid(); drawUI();
 }
 
-function calculateHighlights(kid){
-  const validHi = new Set();
-  const oppKid = (kid === k1.id ? k2.id : k1.id);
-  let passiveTriggered = false;
-  let passiveMsg = "";
-
-  for(let r=0; r<G; r++) {
-    for(let c=0; c<G; c++) {
-      if(grid[r][c] === kid) {
-        DIRS.forEach(([dr,dc]) => {
-          const nr = r + dr, nc = c + dc;
-          if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
-            validHi.add(`${nr},${nc}`);
-          }
-        });
-      }
-    }
+function adjEmp(kid){
+  const s=new Set();
+  for(let r=0;r<G;r++) for(let c=0;c<G;c++){
+    if(grid[r][c]===kid) DIRS.forEach(([dr,dc])=>{
+      const nr=r+dr,nc=c+dc;
+      if(nr>=0&&nr<G&&nc>=0&&nc<G&&grid[nr][nc]===null) s.add(`${nr},${nc}`);
+    });
   }
-
-  // 특성 1. 고구려: 3의 배수 정벌 턴일 때 대각선 방향 빈칸 추가 활성화
-  if(kid === 'goguryeo' && (totalTurns % 3 === 0)) {
-    for(let r=0; r<G; r++) {
-      for(let c=0; c<G; c++) {
-        if(grid[r][c] === 'goguryeo') {
-          DIAG_DIRS.forEach(([dr,dc]) => {
-            const nr = r + dr, nc = c + dc;
-            if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
-              validHi.add(`${nr},${nc}`);
-              passiveTriggered = true;
-            }
-          });
-        }
-      }
-    }
-    if(passiveTriggered) passiveMsg = "⚡ 고구려 특성 발동: 기사의 강습! 대각 확장 돌이 활성화되었습니다.";
-  }
-
-  // 특성 2. 백제: 15%의 확률로 상하좌우 2칸 거리 원격 영지 추가 활성화
-  if(kid === 'baekje' && Math.random() < 0.15) {
-    for(let r=0; r<G; r++) {
-      for(let c=0; c<G; c++) {
-        if(grid[r][c] === 'baekje') {
-          DIRS.forEach(([dr,dc]) => {
-            const nr = r + (dr * 2), nc = c + (dc * 2);
-            if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
-              validHi.add(`${nr},${nc}`);
-              passiveTriggered = true;
-            }
-          });
-        }
-      }
-    }
-    if(passiveTriggered) passiveMsg = "⚡ 백제 특성 발동: 해상 담로 개척! 원격 기지 돌이 활성화되었습니다.";
-  }
-
-  // 특성 3. 신라: 오직 10의 배수 턴에만 접경한 적 돌을 강탈용으로 활성화 (정교한 밸런싱)
-  if(kid === 'silla' && (totalTurns % 10 === 0)) {
-    for(let r=0; r<G; r++) {
-      for(let c=0; c<G; c++) {
-        if(grid[r][c] === 'silla') {
-          DIRS.forEach(([dr,dc]) => {
-            const nr = r + dr, nc = c + dc;
-            if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === oppKid) {
-              validHi.add(`${nr},${nc}`); 
-              passiveTriggered = true;
-            }
-          });
-        }
-      }
-    }
-    if(passiveTriggered) passiveMsg = "⚡ 신라 궁극 특성 발동: 정예 화랑 출격! 접경한 적의 돌을 빼앗을 수 있습니다!";
-  }
-
-  const hintEl = document.getElementById('g-hint-text');
-  if(passiveTriggered && passiveMsg !== "") {
-    hintEl.innerHTML = `<span style="color:#ffeb3b;">${passiveMsg}</span>`;
-  } else {
-    hintEl.textContent = "빛나는 타일(선택 가능한 돌)을 클릭하여 영토를 전개하십시오.";
-  }
-
-  return validHi;
+  return s;
 }
 
 function cntCells(kid){ return grid.flat().filter(x=>x===kid).length; }
 
 function drawGrid(){
   const el=document.getElementById('g-grid');
-  el.style.gridTemplateColumns=`repeat(${G}, min(5.5vh, 5.5vw))`;
+  el.style.gridTemplateColumns=`repeat(${G},34px)`;
   el.innerHTML='';
   const cur=turn===0?k1:k2;
-  const oppKid=(cur.id===k1.id?k2.id:k1.id);
-
-  for(let r=0;r<G;r++) {
-    for(let c=0;c<G;c++){
-      const d=document.createElement('div');
-      d.className='cell';
-      const key=`${r},${c}`, kid=grid[r][c], isHi=hi.has(key);
-      
-      if(kid === 'mountain') {
-        d.style.cssText='background:#1b1510; display:flex; align-items:center; justify-content:center; color:#887766; font-size:14px;';
-        d.textContent = '⛰️';
-      } else if(kid) {
-        const kd=KD[kid];
-        d.style.cssText=`background:${kd.color}; border:2px solid ${kd.accent};`;
-        
-        if(isHi && kid === oppKid) {
-          d.classList.add('hi', 'steal-target');
-          d.onclick=()=>claimCell(r,c);
-        }
-      } else {
-        if(isHi) {
-          d.classList.add('hi');
-          d.style.cssText=`background:${cur.color}aa; border:2px solid #ffffff;`;
-          d.onclick=()=>claimCell(r,c);
-        } else {
-          d.style.cssText='background:#140e05; border:1px solid rgba(212,175,55,0.15);';
-        }
-      }
-      el.appendChild(d);
+  for(let r=0;r<G;r++) for(let c=0;c<G;c++){
+    const d=document.createElement('div');
+    d.className='cell';
+    const key=`${r},${c}`, kid=grid[r][c], isHi=hi.has(key);
+    if(kid){
+      const kd=KD[kid];
+      d.style.cssText=`background:${kd.color};border:1px solid ${kd.accent}28`;
+    } else if(isHi){
+      d.classList.add('hi');
+      d.style.cssText=`background:${cur.color}40;border:2px solid ${cur.accent};`+
+        `box-shadow:inset 0 0 8px ${cur.accent}50`;
+      d.onclick=()=>claimCell(r,c);
+    } else {
+      d.style.cssText='background:#0e0900;border:1px solid rgba(255,255,255,0.04)';
     }
+    el.appendChild(d);
   }
 }
 
 function drawUI(){
-  const cur=turn===0?k1:k2; const c1=cntCells(k1.id), c2=cntCells(k2.id);
-  const tot=(G*G) - grid.flat().filter(x=>x==='mountain').length;
-  
-  document.getElementById('gl-L').textContent=`${k1.name} [${c1}칸]`;
-  document.getElementById('gl-R').textContent=`[${c2}칸] ${k2.name}`;
-  document.getElementById('gl-L').style.color=k1.accent;
-  document.getElementById('gl-R').style.color=k2.accent;
-  
+  const cur=turn===0?k1:k2;
+  const c1=cntCells(k1.id), c2=cntCells(k2.id), tot=G*G;
+  const lbl=(el,k,n)=>{ const e=document.getElementById(el);
+    e.textContent=(k===k1?k.name+' '+n+'칸':n+'칸 '+k.name);
+    e.style.color=k.accent; e.style.fontWeight='bold'; };
+  lbl('gl-L',k1,c1); lbl('gl-R',k2,c2);
   document.getElementById('gl-P').textContent=Math.round((c1+c2)/tot*100)+'% 점령';
-  document.getElementById('gf-L').style.width=(c1/tot*100)+'%'; document.getElementById('gf-L').style.background=k1.accent;
-  document.getElementById('gf-R').style.width=(c2/tot*100)+'%'; document.getElementById('gf-R').style.background=k2.accent;
-  
+  const fl=document.getElementById('gf-L'), fr=document.getElementById('gf-R');
+  fl.style.width=c1/tot*100+'%'; fl.style.background=`linear-gradient(90deg,${k1.color},${k1.accent})`;
+  fr.style.width=c2/tot*100+'%'; fr.style.background=`linear-gradient(90deg,${k2.accent},${k2.color})`;
   const ti=document.getElementById('g-turn');
-  ti.innerHTML=`[제 ${totalTurns}선택] <strong>${cur.king}</strong> 차례`;
-  ti.style.cssText=`color:#fff; background:${cur.color}; border:2px solid ${cur.accent};`;
-
-  document.getElementById('g-prof-L').classList.toggle('active-turn', turn===0);
-  document.getElementById('g-prof-R').classList.toggle('active-turn', turn===1);
+  ti.textContent=cur.king+'의 차례';
+  ti.style.cssText=`color:${cur.accent};background:${cur.color}55;`+
+    `border:1px solid ${cur.accent}88;padding:5px 16px;border-radius:14px;font-size:12px;font-weight:bold`;
 }
 
 function claimCell(r,c){
-  if(autoInterval === null) btnSfx();
-  const curKid = (turn === 0 ? k1.id : k2.id);
-  
-  grid[r][c] = curKid;
-  totalTurns++;
-
-  const freeSpaces = grid.flat().filter(x => x === null).length;
-  if(freeSpaces === 0){
-    if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-    showVictory(); return; 
+  btnSfx();
+  if(!hi.has(`${r},${c}`)) return;
+  const cur=turn===0?k1:k2;
+  grid[r][c]=cur.id;
+  if(grid.flat().filter(Boolean).length===G*G){ drawGrid(); drawUI(); showVictory(); return; }
+  const nt=1-turn, nk=nt===0?k1:k2;
+  const nadj=adjEmp(nk.id);
+  if(nadj.size>0){ turn=nt; hi=nadj; }
+  else {
+    const cadj=adjEmp(cur.id);
+    if(cadj.size===0){ drawGrid(); drawUI(); showVictory(); return; }
+    hi=cadj;
   }
-
-  const nextTurn = 1 - turn;
-  const nextKing = nextTurn === 0 ? k1 : k2;
-  let nextHi = calculateHighlights(nextKing.id);
-  
-  if(nextHi.size > 0){
-    turn = nextTurn;
-    hi = nextHi;
-  } else {
-    const currentKing = turn === 0 ? k1 : k2;
-    const retryHi = calculateHighlights(currentKing.id);
-    if(retryHi.size === 0) {
-      if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-      showVictory(); return;
-    }
-    hi = retryHi;
-  }
-  drawGrid();
-  drawUI();
-}
-
-function startAutoPlay() {
-  if(autoInterval) return;
-  autoInterval = setInterval(() => {
-    if(hi.size === 0) { clearInterval(autoInterval); autoInterval = null; showVictory(); return; }
-    const arr = Array.from(hi);
-    const [r, c] = arr[Math.floor(Math.random() * arr.length)].split(',').map(Number);
-    claimCell(r, c);
-  }, 150);
+  drawGrid(); drawUI();
 }
 
 function endEarly(){
-  if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-  showVictory();
+  if(confirm('현재 점수로 게임을 종료하시겠습니까?')) showVictory();
 }
 
+/* ═══════════ ⑤ 정산 및 타이핑 효과 엔진 ═══════════ */
 function showVictory(){
   const c1=cntCells(k1.id), c2=cntCells(k2.id);
-  const titleEl = document.getElementById('w-title');
-  if(c1 > c2) { titleEl.textContent = `🏆 ${k1.name} 천하통일!`; titleEl.style.color = k1.accent; }
-  else if(c2 > c1) { titleEl.textContent = `🏆 ${k2.name} 천하통일!`; titleEl.style.color = k2.accent; }
-  else { titleEl.textContent = `🤝 양웅 호각세 (무승부)`; titleEl.style.color = '#d4af37'; }
+  const winner=c1>c2?k1:c2>c1?k2:null;
+  bgm.pause();
+  winAud.currentTime=0; winAud.play().catch(()=>{});
+
+  document.getElementById('w-trophy').textContent = winner?'🏆':'🤝';
+  const wt=document.getElementById('w-title');
+  wt.textContent = winner ? winner.name+' 승리!' : '무승부!';
+  wt.style.color  = winner ? winner.accent : '#d4af37';
+  
+  const imgBox = document.getElementById('w-img-box');
+  imgBox.innerHTML = ''; 
+
+  let speech = '';
+  if (winner) {
+    /* 1. 한 국가 단독 승리 연출 */
+    const imgEl = document.createElement('img');
+    imgEl.className = 'w-img';
+    imgEl.src = winner.img;
+    imgEl.alt = winner.king;
+    imgBox.appendChild(imgEl);
+    
+    speech = winner.wins[Math.floor(Math.random()*winner.wins.length)];
+  } else {
+    /* 2. 무승부 연출: 대결을 펼친 두 국가의 캐릭터 이미지를 양옆에 동시 렌더링 */
+    const imgL = document.createElement('img');
+    imgL.className = 'w-img';
+    imgL.src = k1.img;
+    imgBox.appendChild(imgL);
+
+    const imgR = document.createElement('img');
+    imgR.className = 'w-img';
+    imgR.src = k2.img;
+    imgBox.appendChild(imgR);
+
+    speech = '하늘 아래 두 영웅이 호각을 이루니, 양국의 찬란한 기상이 온 대지를 진동하는도다! 진정한 용호상박이로다!';
+  }
+
+  typeWriter('w-speech', '"' + speech + '"', 40);
 
   document.getElementById('w-scores').innerHTML=`
-    <div class="w-sc" style="color:${k1.accent}"><div class="w-sc-name">${k1.name}</div><div class="w-sc-val">${c1}</div></div>
-    <div style="color:#fff; font-size:32px; align-self:center;">:</div>
-    <div class="w-sc" style="color:${k2.accent}"><div class="w-sc-name">${k2.name}</div><div class="w-sc-val">${c2}</div></div>`;
+    <div class="w-sc">
+      <div style="font-size:17px;color:${k1.accent}">${k1.name}</div>
+      <div style="color:${k1.accent};font-size:32px;font-weight:bold">${c1}</div>
+      <div style="color:rgba(255,255,255,0.4);font-size:11px">칸</div>
+    </div>
+    <div style="color:rgba(255,255,255,0.25);align-self:center;font-size:24px">:</div>
+    <div class="w-sc">
+      <div style="font-size:17px;color:${k2.accent}">${k2.name}</div>
+      <div style="color:${k2.accent};font-size:32px;font-weight:bold">${c2}</div>
+      <div style="color:rgba(255,255,255,0.4);font-size:11px">칸</div>
+    </div>`;
   show('s-win');
 }
 
-function resetAll(){ show('s-title'); }
+function typeWriter(id,txt,ms){
+  const el=document.getElementById(id); el.textContent=''; let i=0;
+  const iv=setInterval(()=>{ el.textContent+=txt[i++]; if(i>=txt.length) clearInterval(iv); },ms);
+}
+
+function resetAll(){
+  winAud.pause(); winAud.currentTime=0;
+  bgm.play().catch(()=>{});
+  show('s-title');
+}
+
+document.addEventListener('click', ()=>{ if(bgm.paused) bgm.play().catch(()=>{}); }, {once:true});
 </script>
 </body>
 </html>
