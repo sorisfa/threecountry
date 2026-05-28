@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>삼국지 땅따먹기</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;800;900&display=swap');
 
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { 
@@ -16,222 +16,213 @@ html,body {
 .screen { position:absolute; inset:0; display:none; }
 .screen.active { display:flex; }
 
-/* 공통 고품격 황금빛/붉은빛 버튼 스타일 (6번 요구사항 반영) */
+/* ── 1. 서체 및 버튼 이미지화 업그레이드 (더 크고 웅장하게) ── */
 .g-btn {
-  background: linear-gradient(180deg, #3a220a 0%, #1f1103 100%);
-  border: 2px solid #d4af37;
-  border-radius: 6px;
-  color: #f3e5ab;
+  background: linear-gradient(180deg, #4a2d11 0%, #261504 100%);
+  border: 3px solid #d4af37;
+  border-radius: 8px;
+  color: #fffde6;
   font-family: 'Noto Serif KR', serif;
   font-weight: 900;
   text-align: center;
   cursor: pointer;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(212,175,55,0.6);
-  box-shadow: inset 0 1px 3px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.7);
-  transition: all 0.2s ease;
+  letter-spacing: 3px;
+  /* 글자 자체를 이미지처럼 보이게 하는 강력한 엠보싱 효과 */
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.25), 0 6px 14px rgba(0,0,0,0.8);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .g-btn:hover:not(:disabled) {
-  background: linear-gradient(180deg, #52310f 0%, #2f1b05 100%);
-  border-color: #fff;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 6px 15px rgba(212,175,55,0.4);
+  background: linear-gradient(180deg, #613c18 0%, #361f07 100%);
+  border-color: #ffffff;
+  color: #ffffff;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 10px 20px rgba(212,175,55,0.5);
 }
 .g-btn:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.9);
 }
 .g-btn:disabled {
-  background: #222 !important;
-  border-color: #444 !important;
-  color: #555 !important;
+  background: #252525 !important;
+  border-color: #444444 !important;
+  color: #666666 !important;
   text-shadow: none !important;
   box-shadow: none !important;
   cursor: not-allowed;
 }
 .g-btn.red {
-  background: linear-gradient(180deg, #5a1414 0%, #300a0a 100%);
-  border-color: #ff4d4d;
-  color: #ffcccc;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px #ff4d4d;
+  background: linear-gradient(180deg, #6e1818 0%, #3b0b0b 100%);
+  border-color: #ff5555;
+  color: #fff0f0;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 6px #ff000044;
 }
 .g-btn.red:hover {
-  background: linear-gradient(180deg, #7a1d1d 0%, #450f0f 100%);
+  background: linear-gradient(180deg, #8f2323 0%, #521111 100%);
   border-color: #ff9999;
-  color: #fff;
 }
 
-/* ── 1. 타이틀 ── */
+/* ── 타이틀 화면 ── */
 #s-title {
   background:url('image/초기화면.png') center/cover no-repeat;
   flex-direction:column; align-items:center; justify-content:flex-end;
   padding-bottom:8%;
 }
-.t-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
-.t-btn-main { width:280px; padding:18px 0; font-size:24px; }
-.t-row { display:flex; gap:16px; }
-.t-btn-sub { width:132px; padding:12px 0; font-size:16px; }
+.t-wrap { display:flex; flex-direction:column; align-items:center; gap:20px; }
+.t-btn-main { width:320px; padding:22px 0; font-size:28px; }
+.t-row { display:flex; gap:20px; }
+.t-btn-sub { width:150px; padding:14px 0; font-size:18px; }
 
-/* ── 1. 나라 선택 화면 전체 배경화면 전면 적용 ── */
+/* ── 나라 선택 화면 ── */
 #s-sel {
   flex-direction:column; align-items:center; justify-content: center;
   background: url('image/세 왕.png') center/cover no-repeat;
   position: relative;
 }
-/* 뒷배경이 있으므로 가독성을 위해 어두운 딤 패널 배치 */
 #s-sel::before {
   content: ""; position: absolute; inset: 0; 
-  background: radial-gradient(circle, rgba(5,3,0,0.6) 30%, rgba(0,0,0,0.9) 100%);
+  background: radial-gradient(circle, rgba(5,3,0,0.5) 20%, rgba(0,0,0,0.95) 100%);
   z-index: 1;
 }
 .sel-content {
   position: relative; z-index: 2; width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 45px;
   padding: 40px 20px;
 }
 .sel-title { 
-  color:#fff; font-size:32px; font-weight:900; letter-spacing:4px; 
-  text-shadow: 0 0 15px rgba(212,175,55,0.9), 0 2px 4px rgba(0,0,0,1); 
+  color:#fff; font-size:38px; font-weight:900; letter-spacing:4px; 
+  text-shadow: 0 0 20px rgba(212,175,55,1), 0 3px 6px rgba(0,0,0,1); 
 }
-.k-row { display:flex; gap:30px; justify-content:center; }
+.k-row { display:flex; gap:35px; justify-content:center; }
 .k-card {
-  width:180px; border-radius:10px; overflow:hidden; cursor:pointer;
+  width:210px; border-radius:12px; overflow:hidden; cursor:pointer;
   border:3px solid rgba(255,255,255,0.2); transition:all 0.25s;
-  background:rgba(5,3,1,0.85); box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  background:rgba(5,3,1,0.85); box-shadow: 0 10px 25px rgba(0,0,0,0.7);
 }
-.k-card img { width:100%; height:220px; object-fit:cover; display:block; }
+.k-card img { width:100%; height:250px; object-fit:cover; display:block; }
 .k-card .kn {
-  color:#fff; text-align:center; font-size:18px; font-weight:700; 
-  padding:12px 4px; background:rgba(20,12,4,0.9);
-  border-top: 1px solid rgba(212,175,55,0.3);
+  color:#fff; text-align:center; font-size:22px; font-weight:800; 
+  padding:14px 4px; background:rgba(22,14,5,0.92);
+  border-top: 2px solid rgba(212,175,55,0.3);
 }
-.k-card.on { border-color:#d4af37; box-shadow:0 0 30px rgba(212,175,55,0.9); transform: scale(1.06); }
-.k-card.off { opacity:0.25; cursor:not-allowed; transform: scale(0.95); }
-.sel-btn-ok { width: 260px; padding: 16px 0; font-size: 22px; }
+.k-card.on { border-color:#d4af37; box-shadow:0 0 35px rgba(212,175,55,1); transform: scale(1.06); }
+.k-card.off { opacity:0.2; cursor:not-allowed; transform: scale(0.95); }
+.sel-btn-ok { width: 300px; padding: 18px 0; font-size: 26px; }
 
-/* ── 3. 대화 화면 (캐릭터 전체 크기화 및 크롭 방지) ── */
+/* ── 대화 화면 (서체 대폭 확장) ── */
 #s-dlg {
   background: linear-gradient(160deg, #0a0500, #171002);
   flex-direction: column; justify-content: space-between; padding: 0;
 }
 .dlg-hdr { 
-  color: #d4af37; font-size: 22px; font-weight: 900; letter-spacing: 10px; 
-  text-align: center; padding: 25px 0; background: rgba(0,0,0,0.6); 
-  border-bottom: 2px solid rgba(212,175,55,0.4); text-shadow: 0 0 12px rgba(212,175,55,0.7);
+  color: #d4af37; font-size: 26px; font-weight: 900; letter-spacing: 12px; 
+  text-align: center; padding: 25px 0; background: rgba(0,0,0,0.7); 
+  border-bottom: 2px solid rgba(212,175,55,0.5); text-shadow: 0 0 15px rgba(212,175,55,0.8);
 }
 .dlg-fullscreen-body {
-  flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; position: relative; padding: 0 2%;
+  flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; position: relative; padding: 0 3%;
 }
 .dlg-side-char {
-  width: 44vw; height: 65vh; display: flex; flex-direction: column; justify-content: flex-end;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.2; transform: scale(0.92); filter: grayscale(50%);
+  width: 43vw; height: 65vh; display: flex; flex-direction: column; justify-content: flex-end;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.15; transform: scale(0.92); filter: grayscale(60%);
 }
-/* 캐릭터 전체 이미지가 잘리지 않고 완전하게 나오도록contain 적용 */
-.dlg-side-char img {
-  width: 100%; height: 75%; object-fit: contain; object-position: bottom center;
-  border-radius: 12px 12px 0 0;
-}
-/* 2번 요구사항: 대폭 키운 가독성 높은 폰트 및 대화 상자 */
+.dlg-side-char img { width: 100%; height: 75%; object-fit: contain; object-position: bottom center; }
 .dlg-side-bubble {
-  width: 100%; min-height: 120px; background: rgba(12, 7, 2, 0.95);
-  border: 2px solid rgba(212, 175, 55, 0.4); border-radius: 8px;
-  padding: 18px; text-align: center; color: #fff;
-  font-size: 19px; font-weight:700; line-height: 1.6; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  width: 100%; min-height: 140px; background: rgba(10, 6, 2, 0.96);
+  border: 3px solid rgba(212, 175, 55, 0.4); border-radius: 10px;
+  padding: 22px; text-align: center; color: #ffffff;
+  font-size: 24px; font-weight:800; line-height: 1.7; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
   display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 .dlg-side-char.act { opacity: 1; transform: scale(1.03); filter: grayscale(0%); }
-.dlg-side-char.act .dlg-side-bubble { border-color: #d4af37; background: rgba(28, 17, 6, 0.98); box-shadow: 0 0 20px rgba(212,175,55,0.25); }
+.dlg-side-char.act .dlg-side-bubble { border-color: #d4af37; background: rgba(33, 20, 7, 0.98); box-shadow: 0 0 25px rgba(212,175,55,0.35); }
 
-.dlg-center-ui { position: absolute; bottom: 28vh; left: 50%; transform: translateX(-50%); z-index: 10; }
-.dlg-dots { display:flex; gap:10px; background: rgba(0,0,0,0.6); padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.2); }
-.dlg-dots span { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.3s; }
-.dlg-dots span.done { background:#d4af37; box-shadow: 0 0 10px #d4af37; }
+.dlg-center-ui { position: absolute; bottom: 30vh; left: 50%; transform: translateX(-50%); z-index: 10; }
+.dlg-dots { display:flex; gap:12px; background: rgba(0,0,0,0.7); padding: 10px 22px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.3); }
+.dlg-dots span { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.3s; }
+.dlg-dots span.done { background:#d4af37; box-shadow: 0 0 12px #d4af37; }
 
 .dlg-foot { 
   width: 100%; display: flex; justify-content: center; padding: 25px 0; 
-  background: rgba(0,0,0,0.6); border-top: 2px solid rgba(212,175,55,0.3); 
+  background: rgba(0,0,0,0.7); border-top: 2px solid rgba(212,175,55,0.4); 
 }
-.dlg-next { width: 240px; padding: 14px 0; font-size: 20px; }
+.dlg-next { width: 280px; padding: 16px 0; font-size: 22px; }
 
-/* ── 5. 게임 화면 (좌우 캐릭터 영구 배치 디자인) ── */
+/* ── 게임 전장 화면 ── */
 #s-game {
-  background: radial-gradient(circle at center, #1f1203 0%, #050300 100%);
+  background: radial-gradient(circle at center, #241504 0%, #050300 100%);
   flex-direction: column; align-items: center; justify-content: space-between;
-  padding: 15px; gap: 10px;
+  padding: 20px; gap: 15px;
 }
-.g-header { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 5; }
-.g-title { color:#d4af37; font-size:26px; font-weight:900; letter-spacing: 3px; text-shadow: 0 0 12px rgba(212,175,55,0.6); }
-.g-scorebar { width:100%; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.15); }
-.g-slbls { display:flex; justify-content:space-between; font-size:18px; font-weight: 700; margin-bottom:6px; }
-.g-track { height:14px; background:rgba(255,255,255,0.06); border-radius:7px; overflow:hidden; position:relative; border: 1px solid rgba(212,175,55,0.3); }
+.g-header { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; }
+.g-title { color:#d4af37; font-size:32px; font-weight:900; letter-spacing: 4px; text-shadow: 0 0 15px rgba(212,175,55,0.7); }
+.g-scorebar { width:100%; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 10px; border: 2px solid rgba(212,175,55,0.2); }
+.g-slbls { display:flex; justify-content:space-between; font-size:22px; font-weight: 800; margin-bottom:8px; }
+.g-track { height:18px; background:rgba(255,255,255,0.06); border-radius:9px; overflow:hidden; position:relative; border: 1px solid rgba(212,175,55,0.4); }
 .g-fill  { position:absolute; top:0; height:100%; transition:width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.g-turn  { padding:8px 32px; border-radius:20px; font-size:18px; font-weight:900; margin-top: 5px; box-shadow: 0 3px 10px rgba(0,0,0,0.5); }
+.g-turn  { padding:10px 40px; border-radius:25px; font-size:22px; font-weight:900; margin-top: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
 
-/* 좌우 배치형 메인 컨테이너 */
+/* 메인 프레임 레이아웃 */
 .g-main-wrapper {
-  flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 10px 2%; overflow: hidden;
+  flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 25px; padding: 5px 1%; overflow: hidden;
 }
-/* 좌우 사이드 프로필 일러스트 크기 조절 */
 .g-side-profile {
-  width: 18vw; height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  background: rgba(0,0,0,0.4); border: 2px solid rgba(212,175,55,0.2); border-radius: 12px; padding: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5); transition: all 0.3s ease;
+  width: 18vw; height: 52vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  background: rgba(0,0,0,0.5); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6); transition: all 0.3s ease;
 }
-.g-side-profile img { width: 100%; height: 82%; object-fit: contain; object-position: bottom; }
+.g-side-profile img { width: 100%; height: 80%; object-fit: contain; object-position: bottom; }
 .g-side-profile .g-profile-name { 
-  width: 100%; text-align: center; color: #fff; font-size: 16px; font-weight: 700; 
-  padding: 8px 0 2px 0; border-top: 1px solid rgba(212,175,55,0.15); margin-top: 5px;
+  width: 100%; text-align: center; color: #fff; font-size: 20px; font-weight: 800; 
+  padding: 10px 0 2px 0; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 8px; line-height: 1.4;
 }
 .g-side-profile.active-turn {
-  border-color: #d4af37; box-shadow: 0 0 25px rgba(212,175,55,0.5); background: rgba(40,25,10,0.5); transform: scale(1.03);
+  border-color: #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.6); background: rgba(54,34,14,0.5); transform: scale(1.04);
 }
 
-.g-grid-container {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-}
+.g-grid-container { flex: 1; display: flex; align-items: center; justify-content: center; }
 #g-grid  {
-  display:grid; gap:5px; padding:15px;
-  background:rgba(5,3,1,0.9); border-radius:12px;
-  border:3px solid rgba(212,175,55,0.4);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+  display:grid; gap:6px; padding:16px;
+  background:rgba(5,3,1,0.92); border-radius:14px;
+  border:3px solid rgba(212,175,55,0.45);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.95);
 }
-.cell { width:min(5.8vh, 5.8vw); height:min(5.8vh, 5.8vw); border-radius:5px; transition: all 0.15s ease; }
+.cell { width:min(5.6vh, 5.6vw); height:min(5.6vh, 5.6vw); border-radius:6px; transition: all 0.15s ease; }
 .cell.hi { cursor:pointer; animation: pulseGlow 1.2s infinite alternate; }
 
 @keyframes pulseGlow {
-  from { transform: scale(0.95); filter: brightness(0.85); }
-  to { transform: scale(1.03); filter: brightness(1.3); }
+  from { transform: scale(0.94); filter: brightness(0.8); }
+  to { transform: scale(1.04); filter: brightness(1.35); }
 }
 
-.g-footer { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; }
-.g-hint { color:rgba(212,175,55,0.7); font-size:15px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 1px 2px #000; }
-.g-btn-group { display: flex; gap: 14px; width: 100%; justify-content: center; }
-.g-foot-btn { padding: 10px 24px; font-size: 15px; }
+.g-footer { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; gap: 14px; z-index: 5; }
+.g-hint { color:rgba(212,175,55,0.85); font-size:18px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
+.g-btn-group { display: flex; gap: 18px; width: 100%; justify-content: center; }
+.g-foot-btn { padding: 14px 32px; font-size: 18px; }
 
-/* ── 승리 ── */
+/* ── 승리 정산 화면 ── */
 #s-win {
-  background:radial-gradient(ellipse at 50% 30%, #301e05, #050300);
+  background:radial-gradient(ellipse at 50% 30%, #422907, #050300);
   flex-direction:column; align-items:center; justify-content:center;
-  gap:22px; padding:20px;
+  gap:25px; padding:20px;
 }
-.w-trophy { font-size:70px; animation:popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
-.w-title  { font-size:42px; font-weight:900; animation:popIn 0.8s 0.1s ease both; text-shadow:0 0 30px currentColor, 0 2px 4px #000; }
+.w-trophy { font-size:80px; animation:popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+.w-title  { font-size:52px; font-weight:900; animation:popIn 0.8s 0.1s ease both; text-shadow:0 0 35px currentColor, 0 3px 6px #000; }
 .w-img    {
-  width:240px; height:300px; object-fit:contain; border-radius:12px;
-  border:3px solid #d4af37; box-shadow:0 0 40px rgba(212,175,55,0.7);
-  background: rgba(0,0,0,0.4); animation:popIn 1s 0.2s ease both;
+  width:260px; height:320px; object-fit:contain; border-radius:14px;
+  border:3px solid #d4af37; box-shadow:0 0 45px rgba(212,175,55,0.8);
+  background: rgba(0,0,0,0.5); animation:popIn 1s 0.2s ease both;
 }
 .w-speech {
-  color:#fff; font-size:20px; font-weight: 700; text-align:center;
-  max-width:550px; line-height:1.8; font-style:italic; min-height:56px;
-  background: rgba(15,10,5,0.85); padding: 18px 25px; border-radius:10px; border: 2px dashed rgba(212,175,55,0.3);
+  color:#fff; font-size:24px; font-weight: 800; text-align:center;
+  max-width:650px; line-height:1.8; font-style:italic; min-height:64px;
+  background: rgba(18,12,6,0.9); padding: 22px 30px; border-radius:12px; border: 2px dashed rgba(212,175,55,0.4);
 }
-.w-scores { display:flex; gap:60px; }
+.w-scores { display:flex; gap:80px; }
 .w-sc { text-align:center; }
-.w-sc-val { font-size:40px; font-weight:900; }
-.w-sc-name { font-size:20px; font-weight:700; }
-.reset-btn { width: 220px; padding: 14px 0; font-size: 18px; }
+.w-sc-val { font-size:48px; font-weight:900; }
+.w-sc-name { font-size:24px; font-weight:800; }
+.reset-btn { width: 260px; padding: 16px 0; font-size: 20px; }
 
 @keyframes popIn {
   from { transform:scale(0.4); opacity:0; }
@@ -299,7 +290,7 @@ html,body {
     <div class="g-scorebar">
       <div class="g-slbls">
         <span id="gl-L"></span>
-        <span id="gl-P" style="color:#d4af37;font-size:14px;"></span>
+        <span id="gl-P" style="color:#d4af37;"></span>
         <span id="gl-R"></span>
       </div>
       <div class="g-track">
@@ -348,7 +339,7 @@ html,body {
 <audio id="aud-win" src="audio/승리.mp3"     preload="auto"></audio>
 
 <script>
-/* ═══════════ 데이터 및 설정 ═══════════ */
+/* ═══════════ 데이터 세팅 ═══════════ */
 const KD = {
   goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽',
     img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
@@ -394,12 +385,11 @@ const SCRIPTS = {
 const G=10, DIRS=[[-1,0],[1,0],[0,-1],[0,1]];
 let sel=[], k1=null, k2=null, script=[], si=0;
 let grid=[], turn=0, hi=new Set();
-let autoInterval = null; // 자동입력 제어 핸들러
+let autoInterval = null;
 
 const bgm    = document.getElementById('aud-bgm');
 const winAud = document.getElementById('aud-win');
 
-/* ── 띵동 효과음 ── */
 function btnSfx(){
   try {
     const ac=new(window.AudioContext||window.webkitAudioContext)();
@@ -407,7 +397,7 @@ function btnSfx(){
       const o=ac.createOscillator(), g=ac.createGain();
       o.connect(g); g.connect(ac.destination);
       o.frequency.value=hz; o.type='sine';
-      g.gain.setValueAtTime(st===0?0.25:0, ac.currentTime);
+      g.gain.setValueAtTime(0.25, ac.currentTime);
       if(st>0) g.gain.setValueAtTime(0.25, ac.currentTime+st);
       g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+end);
       o.start(ac.currentTime+st); o.stop(ac.currentTime+end);
@@ -420,7 +410,6 @@ function show(id){
   document.getElementById(id).classList.add('active');
 }
 
-/* ── 선택 화면 진입 ── */
 function goSelect(){
   sel=[];
   bgm.play().catch(()=>{});
@@ -432,7 +421,7 @@ function goSelect(){
 function exitGame(){
   if(confirm('진군을 중단하고 현실로 퇴각하시겠습니까?')){
     bgm.pause();
-    document.body.innerHTML='<p style="color:#d4af37;text-align:center;margin-top:45vh;font-family:\'Noto Serif KR\',serif;font-size:24px;font-weight:900;">패업을 중단하였습니다. 창을 닫아주십시오.</p>';
+    document.body.innerHTML='<p style="color:#d4af37;text-align:center;margin-top:45vh;font-family:\'Noto Serif KR\',serif;font-size:26px;font-weight:900;">패업을 중단하였습니다.</p>';
   }
 }
 
@@ -461,7 +450,6 @@ function confirmSel(){
   show('s-dlg');
 }
 
-/* ── 대화 상자 개별 렌더링 ── */
 function renderDlg(){
   const ln=script[si];
   const isL=(ln.k===sel[0]);
@@ -473,7 +461,7 @@ function renderDlg(){
   document.getElementById('dc-L').classList.toggle('act', isL);
   document.getElementById('dc-R').classList.toggle('act', !isL);
   
-  const textContent = `<span style="color:${spk.accent};font-size:16px;font-weight:900;display:block;margin-bottom:8px">【${spk.king}】</span>${ln.t}`;
+  const textContent = `<span style="color:${spk.accent};font-size:20px;font-weight:900;display:block;margin-bottom:8px">【${spk.king}】</span>${ln.t}`;
 
   if(isL) {
     bblL.innerHTML = textContent; bblL.style.visibility = 'visible';
@@ -493,9 +481,7 @@ function advDlg(){
   else { initGame(); show('s-game'); }
 }
 
-/* ── 게임 메인 초기화 ── */
 function initGame(){
-  // 인터벌 리셋 구조화
   if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
   document.getElementById('btn-auto-play').disabled = false;
   document.getElementById('btn-early-end').disabled = false;
@@ -505,7 +491,6 @@ function initGame(){
   [[G-2,G-2],[G-2,G-1],[G-1,G-2],[G-1,G-1]].forEach(([r,c])=>grid[r][c]=k2.id);
   turn=0; 
   
-  // 5. 게임 화면 좌우 배치판 정보 동적 매핑
   document.getElementById('g-prof-img-L').src = k1.img;
   document.getElementById('g-prof-name-L').innerHTML = `<span style="color:${k1.accent}">고구려</span><br>${k1.king}`;
   document.getElementById('g-prof-img-R').src = k2.img;
@@ -516,23 +501,30 @@ function initGame(){
   drawUI();
 }
 
+/* ── 2. 영토 상하좌우 탐색 로직 디버깅 완료 ── */
 function adjEmp(kid){
   const s=new Set();
-  for(let r=0;r<G;r++) for(let c=0;c<G;c++){
-    if(grid[r][c]===kid) DIRS.forEach(([dr,dc])=>{
-      const nr=r+dr,nc=c+dc;
-      if(nr>=0&&nr<G&&nc>=0&&nc<G&&grid[nr][nc]===null) s.add(`${nr},${c}`);
-    });
+  for(let r=0; r<G; r++) {
+    for(let c=0; c<G; c++) {
+      if(grid[r][c] === kid) {
+        DIRS.forEach(([dr,dc]) => {
+          const nr = r + dr, nc = c + dc;
+          // 오타 수정: ${nr},${c}에서 ${nr},${nc}로 교체하여 상하좌우 완전개방
+          if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === null) {
+            s.add(`${nr},${nc}`);
+          }
+        });
+      }
+    }
   }
   return s;
 }
 
 function cntCells(kid){ return grid.flat().filter(x=>x===kid).length; }
 
-/* ── 바둑판/그리드 시각화 ── */
 function drawGrid(){
   const el=document.getElementById('g-grid');
-  el.style.gridTemplateColumns=`repeat(${G}, min(5.8vh, 5.8vw))`;
+  el.style.gridTemplateColumns=`repeat(${G}, min(5.6vh, 5.6vw))`;
   el.innerHTML='';
   const cur=turn===0?k1:k2;
   for(let r=0;r<G;r++) for(let c=0;c<G;c++){
@@ -541,11 +533,10 @@ function drawGrid(){
     const key=`${r},${c}`, kid=grid[r][c], isHi=hi.has(key);
     if(kid){
       const kd=KD[kid];
-      d.style.cssText=`background:${kd.color};border:2px solid ${kd.accent}aa;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);`;
+      d.style.cssText=`background:${kd.color};border:2px solid ${kd.accent}aa;`;
     } else if(isHi){
       d.classList.add('hi');
-      d.style.cssText=`background:${cur.color}90;border:2px solid #fff;box-shadow:0 0 12px ${cur.accent}, inset 0 0 8px #fff;`;
-      // 오토 플레이 중이 아닐 때만 클릭 리스너 오픈
+      d.style.cssText=`background:${cur.color}90;border:2px solid #fff;box-shadow:0 0 14px ${cur.accent}, inset 0 0 8px #fff;`;
       if(!autoInterval) d.onclick=()=>claimCell(r,c);
     } else {
       d.style.cssText='background:#140e05;border:1px solid rgba(212,175,55,0.15);';
@@ -572,16 +563,14 @@ function drawUI(){
   ti.textContent=cur.king+' 장군의 대의선택';
   ti.style.cssText=`color:#fff;background:linear-gradient(135deg, ${cur.color}, #000);border:2px solid ${cur.accent};`;
 
-  // 5번: 활성화된 차례의 군주 프로필을 시각적으로 강조
   document.getElementById('g-prof-L').classList.toggle('active-turn', turn===0);
   document.getElementById('g-prof-R').classList.toggle('active-turn', turn===1);
 }
 
-/* ── 4. 자동입력 번개배치 시스템 (0.2초 간격 무한 체이싱) ── */
+/* ── 3. 자동입력 무한 루프 수정 및 영토 전진 확장 로직 고도화 ── */
 function startAutoPlay() {
-  if(autoInterval) return; // 이미 작동 중이면 무시
+  if(autoInterval) return;
   
-  // 버튼 비활성화 처리로 꼬임 방지
   document.getElementById('btn-auto-play').disabled = true;
   document.getElementById('btn-early-end').disabled = true;
   
@@ -593,16 +582,15 @@ function startAutoPlay() {
       return;
     }
     
-    // 현재 턴의 하이라이트 리스트 중 첫 번째 항목을 자동 추출
+    // 버그 해결: 매번 고정 좌표를 찍는 구조에서 하이라이트 활성 배열 중 하나를 랜덤 피킹하여 진격하는 구조로 변환
     const arr = Array.from(hi);
-    const [r, c] = arr[0].split(',').map(Number);
+    const randomPick = arr[Math.floor(Math.random() * arr.length)];
+    const [r, c] = randomPick.split(',').map(Number);
     
-    // 땅 점령 수행
     claimCell(r, c);
-  }, 200); // 0.2초 요구사항 칼적용
+  }, 200); 
 }
 
-/* ── 실시간 패권 진단 및 교착 자동 종료 ── */
 function checkPredictiveEnd() {
   const p1Adj = adjEmp(k1.id);
   const p2Adj = adjEmp(k2.id);
@@ -652,7 +640,6 @@ function canReach(startR, startC, kid) {
   return false;
 }
 
-/* ── 칸 점령 핵심 처리 ── */
 function claimCell(r,c){
   btnSfx();
   grid[r][c]=(turn===0?k1.id:k2.id);
@@ -687,7 +674,6 @@ function endEarly(){
   }
 }
 
-/* ── 결과 화면 출력 ── */
 function showVictory(){
   if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
   const c1=cntCells(k1.id), c2=cntCells(k2.id);
@@ -710,13 +696,13 @@ function showVictory(){
     <div class="w-sc">
       <div class="w-sc-name" style="color:${k1.accent}">${k1.name}</div>
       <div class="w-sc-val" style="color:${k1.accent}">${c1}</div>
-      <div style="color:rgba(255,255,255,0.4);font-size:13px">영토 군현</div>
+      <div style="color:rgba(255,255,255,0.4);font-size:15px">영토 군현</div>
     </div>
-    <div style="color:rgba(255,255,255,0.25);align-self:center;font-size:32px">:</div>
+    <div style="color:rgba(255,255,255,0.25);align-self:center;font-size:36px">:</div>
     <div class="w-sc">
       <div class="w-sc-name" style="color:${k2.accent}">${k2.name}</div>
       <div class="w-sc-val" style="color:${k2.accent}">${c2}</div>
-      <div style="color:rgba(255,255,255,0.4);font-size:13px">영토 군현</div>
+      <div style="color:rgba(255,255,255,0.4);font-size:15px">영토 군현</div>
     </div>`;
   show('s-win');
 }
