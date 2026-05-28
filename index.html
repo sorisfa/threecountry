@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>삼국지 땅따먹기 : 영웅의 도래 ver 9.90</title>
+<title>삼국지 땅따먹기 : 영웅의 도래 ver 9.91</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght=500;800;900&display=swap');
 
@@ -108,15 +108,11 @@ html,body {
 .map-name { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 6px; }
 .map-desc { font-size: 13px; color: #ccc; text-align: center; line-height: 1.4; word-break: keep-all; }
 
-/* ② 나라 선택 (★ 배경 100% 전체 화면 확장 및 정중앙 배치 반영 완료) ★ */
+/* ② 나라 선택 */
 #s-sel {
-  width: 100vw;
-  height: 100vh;
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; /* 전체 요소를 세로축 정중앙으로 배치 */
-  background: url('image/세 왕.png') center/cover no-repeat; /* 배경 이미지가 화면 전체를 커버 */
-  position: relative;
+  width: 100vw; height: 100vh; flex-direction: column; 
+  align-items: center; justify-content: center; 
+  background: url('image/세 왕.png') center/cover no-repeat; position: relative;
 }
 #s-sel::before {
   content: ""; position: absolute; inset: 0; 
@@ -164,11 +160,13 @@ html,body {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.15; transform: scale(0.92); filter: grayscale(60%);
 }
 .dlg-side-char img { width: 100%; height: 75%; object-fit: contain; object-position: bottom center; }
+
+/* 1. 각 국 대사 칸 크기 조절 및 폰트 축소 (프레임 침범 해결) */
 .dlg-side-bubble {
-  width: 100%; min-height: 140px; background: rgba(10, 6, 2, 0.96);
+  width: 100%; min-height: 105px; background: rgba(10, 6, 2, 0.96);
   border: 3px solid rgba(212, 175, 55, 0.4); border-radius: 10px;
-  padding: 22px; text-align: center; color: #ffffff;
-  font-size: 24px; font-weight:800; line-height: 1.7; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+  padding: 16px 20px; text-align: center; color: #ffffff;
+  font-size: 20px; font-weight:800; line-height: 1.6; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
   display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 .dlg-side-char.act { opacity: 1; transform: scale(1.03); filter: grayscale(0%); }
@@ -296,7 +294,7 @@ html,body {
       <button class="g-btn t-btn-sub" onclick="btnSfx();openMapModal()">열전 모드</button>
     </div>
     <button class="g-btn t-btn-sub red" onclick="btnSfx();exitGame()">전투이탈</button>
-    <div class="v-text">ver 9.90</div>
+    <div class="v-text">ver 9.91</div>
   </div>
 </div>
 
@@ -313,7 +311,7 @@ html,body {
       </div>
       <div class="info-card" style="border-color:#2ecc71">
         <img src="image/온조왕.png" alt="온조왕">
-        <div class="info-name" style="color:#2ecc71">백제 (온조왕)</div>
+        <div class="info-name" style="color:#2ecc7 green">백제 (온조왕)</div>
         <div class="info-skill">해상 담로의 개척</div>
         <div class="info-desc">백제 턴 개시 시 15%의 확률로 기습 통로가 개척됩니다. 인접한 칸뿐만 아니라 1칸을 아예 뛰어넘어 배치 가능한 '외딴 전술 요충지'들이 격전판에 동시 활성화됩니다.</div>
       </div>
@@ -435,7 +433,8 @@ html,body {
   <div class="g-footer">
     <div class="g-hint" id="g-hint-text">빛나는 진군 경로 중 한 곳을 점령하십시오.</div>
     <div class="g-btn-group">
-      <button class="g-btn g-foot-btn" id="btn-auto-play" onclick="btnSfx();startAutoPlay()">자동입력 번개배치 (0.2s)</button>
+      <!-- 2. 버튼 내 (0.2s) 글자 삭제 완료 -->
+      <button class="g-btn g-foot-btn" id="btn-auto-play" onclick="btnSfx();startAutoPlay()">자동입력 번개배치</button>
       <button class="g-btn g-foot-btn red" id="btn-early-end" onclick="btnSfx();endEarly()">반정 회군 (현재 계산 종료)</button>
     </div>
   </div>
@@ -463,7 +462,7 @@ const KD = {
     img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
     wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
           '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'],
-    drawSpeech: '고구려의 철기군 and 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
+    drawSpeech: '고구려의 철기군과 화살도 그대들의 방패를 다 뚫지는 못했구려. 과연 호각이오.' },
   baekje:  { id:'baekje',   name:'백제',   king:'온조왕', desc:'해상 담로 개척 (15% 확률로 1칸 건너 원격기지 활성화)',
     img:'image/온조왕.png', color:'#145c2a', accent:'#2ecc71',
     wins:['백제의 위대함이 오늘 다시 한번 증명되었도다!',
@@ -586,7 +585,7 @@ function renderDlg(){
   document.getElementById('dc-L').classList.toggle('act', isL);
   document.getElementById('dc-R').classList.toggle('act', !isL);
   
-  const textContent = `<span style="color:${spk.accent};font-size:20px;font-weight:900;display:block;margin-bottom:8px">【${spk.king}】</span>${ln.t}`;
+  const textContent = `<span style="color:${spk.accent};font-size:18px;font-weight:900;display:block;margin-bottom:6px">【${spk.king}】</span>${ln.t}`;
 
   if(isL) {
     bblL.innerHTML = textContent; bblL.style.visibility = 'visible';
@@ -796,6 +795,7 @@ function drawUI(){
   document.getElementById('g-prof-R').classList.toggle('active-turn', turn===1);
 }
 
+// 3. 자동 번개 배치 속도를 0.1초(100ms)로 증속 완료
 function startAutoPlay() {
   if(autoInterval) return;
   document.getElementById('btn-auto-play').disabled = true;
@@ -806,7 +806,7 @@ function startAutoPlay() {
     const arr = Array.from(hi);
     const [r, c] = arr[Math.floor(Math.random() * arr.length)].split(',').map(Number);
     claimCell(r, c);
-  }, 200); 
+  }, 100); 
 }
 
 function claimCell(r,c){
