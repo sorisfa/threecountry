@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>삼국지 땅따먹기 : 영웅의 도래 ver 0.97</title>
+<title>삼국지 땅따먹기 : 영웅의 도래 ver 9.88</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;800;900&display=swap');
 
@@ -60,17 +60,18 @@ html,body {
   border-color: #ff9999;
 }
 
-/* 타이틀 화면 */
+/* 타이틀 화면 (배경화면 이미지 지정) */
 #s-title {
-  background:radial-gradient(circle, #2c1a08 0%, #050300 100%);
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('초기화면.png') no-repeat center center;
+  background-size: cover;
   flex-direction:column; align-items:center; justify-content:center; gap:30px;
 }
-.t-main-title { color: #d4af37; font-size: 45px; font-weight: 900; text-shadow: 0 0 20px rgba(212,175,55,0.6); letter-spacing: 4px; }
-.t-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
+.t-main-title { color: #d4af37; font-size: 45px; font-weight: 900; text-shadow: 0 0 25px rgba(0,0,0,1), 0 0 15px rgba(212,175,55,0.6); letter-spacing: 4px; }
+.t-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; border: 1px solid rgba(212,175,55,0.3); }
 .t-btn-main { width:320px; padding:22px 0; font-size:28px; }
 .t-row { display:flex; gap:20px; }
 .t-btn-sub { width:150px; padding:14px 0; font-size:17px; }
-.v-text { color: rgba(212,175,55,0.7); font-size: 15px; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
+.v-text { color: #ffeb3b; font-size: 15px; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
 
 /* 모달 */
 .modal-overlay {
@@ -126,9 +127,10 @@ html,body {
 #s-dlg { background: #0a0500; flex-direction: column; justify-content: space-between; }
 .dlg-hdr { color: #d4af37; font-size: 26px; font-weight: 900; text-align: center; padding: 25px 0; border-bottom: 2px solid rgba(212,175,55,0.5); }
 .dlg-fullscreen-body { flex: 1; width: 100%; display: flex; justify-content: space-around; align-items: center; padding: 0 5%; }
-.dlg-side-char { width: 40%; background: rgba(33, 20, 7, 0.6); border: 2px solid rgba(212,175,55,0.2); border-radius: 12px; padding: 30px; transition: all 0.3s; opacity: 0.3; }
+.dlg-side-char { width: 35%; background: rgba(33, 20, 7, 0.6); border: 2px solid rgba(212,175,55,0.2); border-radius: 12px; padding: 20px; transition: all 0.3s; opacity: 0.2; text-align: center; }
 .dlg-side-char.act { opacity: 1; border-color: #d4af37; box-shadow: 0 0 25px rgba(212,175,55,0.3); background: rgba(33, 20, 7, 0.95); }
-.dlg-side-bubble { color: #ffffff; font-size: 22px; font-weight:800; line-height: 1.6; text-align: center; }
+.dlg-img { width: 100%; max-height: 260px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: rgba(0,0,0,0.3); }
+.dlg-side-bubble { color: #ffffff; font-size: 20px; font-weight:800; line-height: 1.6; text-align: center; min-height: 70px; }
 .dlg-foot { width: 100%; display: flex; justify-content: center; padding: 25px 0; border-top: 2px solid rgba(212,175,55,0.4); }
 .dlg-next { width: 280px; padding: 16px 0; font-size: 22px; }
 
@@ -143,7 +145,8 @@ html,body {
 .g-turn  { padding:8px 35px; border-radius:25px; font-size:18px; font-weight:900; margin-top: 4px; text-align: center;}
 
 .g-main-wrapper { flex: 1; width: 100%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
-.g-side-profile { width: 220px; height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.55); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 20px; gap:12px; }
+.g-side-profile { width: 230px; height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: rgba(0,0,0,0.55); border: 2px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 15px; gap:10px; }
+.g-prof-img { width: 100%; height: 180px; object-fit: contain; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.1); }
 .g-profile-name { text-align: center; color: #fff; font-size: 20px; font-weight: 800; }
 .g-profile-skill { font-size: 13px; color: #ffeb3b; text-align: center; line-height: 1.4; word-break: keep-all; }
 .g-side-profile.active-turn { border-color: #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.5); background: rgba(54,34,14,0.4); }
@@ -152,14 +155,14 @@ html,body {
 #g-grid  { display:grid; gap:6px; padding:12px; background:rgba(5,3,1,0.94); border-radius:14px; border:3px solid rgba(212,175,55,0.45); }
 .cell { width:min(5.5vh, 5.5vw); height:min(5.5vh, 5.5vw); border-radius:6px; transition: all 0.15s ease; position: relative;}
 
-/* 🌟 하이라이트 활성화 타일 애니메이션 */
+/* 하이라이트 활성화 타일 애니메이션 */
 .cell.hi { cursor:pointer; animation: pulseGlow 1.0s infinite alternate !important; border: 2px solid #ffffff !important; z-index: 5; }
 @keyframes pulseGlow {
   from { transform: scale(0.95); filter: brightness(0.9); box-shadow: 0 0 8px rgba(255,255,255,0.5); }
   to { transform: scale(1.05); filter: brightness(1.4); box-shadow: 0 0 22px #ffffff, inset 0 0 10px rgba(255,255,255,0.8); }
 }
 
-/* 신라 특성용 적 영토 강탈 타일 타겟팅 이펙트 */
+/* 신라 10턴 주기 강탈 타겟팅 이펙트 */
 .cell.hi.steal-target {
   animation: stealGlow 0.8s infinite alternate !important;
 }
@@ -194,7 +197,7 @@ html,body {
       <button class="g-btn t-btn-sub" onclick="btnSfx();openSkillModal()">국가 특성</button>
       <button class="g-btn t-btn-sub" onclick="btnSfx();openMapModal()">전장 선택</button>
     </div>
-    <div class="v-text">ver 0.97 (국가 특성 타일 활성화 정상화 버전)</div>
+    <div class="v-text">ver 9.88 (신라 밸런스 조정 및 자산 복구 버전)</div>
   </div>
 </div>
 
@@ -215,8 +218,8 @@ html,body {
       </div>
       <div class="info-card" style="border-color:#60a5fa">
         <div class="info-name" style="color:#60a5fa">신라 (박혁거세)</div>
-        <div class="info-skill">화랑의 풍월도 (적 돌 강탈)</div>
-        <div class="info-desc">내 영토와 인접한 모든 적 세력의 돌을 공격 타겟으로 강제 활성화시킵니다. 해당 적의 돌을 클릭하면 즉시 파괴 후 신라 영토로 포섭합니다.</div>
+        <div class="info-skill">정예 화랑 출격 (적 돌 강탈)</div>
+        <div class="info-desc"><span style="color:#ffeb3b; font-weight:bold;">10의 배수 정벌 턴(10, 20, 30...)에만 발동!</span> 내 영토와 인접한 적의 돌을 타겟팅하여 클릭 시 즉시 신라의 영토로 포섭합니다.</div>
       </div>
     </div>
     <button class="g-btn modal-close" onclick="closeSkillModal()">도감 닫기</button>
@@ -258,7 +261,7 @@ html,body {
       </div>
       <div class="k-card" id="kc-silla" onclick="toggleK('silla')">
         <div class="kn" style="color:#60a5fa">신라</div>
-        <div class="kd">인접한 적 세력의 돌을 강탈용으로 활성화</div>
+        <div class="kd">10턴마다 인접한 적 세력의 돌 강탈 활성화</div>
       </div>
     </div>
     <button class="g-btn sel-btn-ok" id="sel-ok" disabled onclick="btnSfx();confirmSel()">진군 개시 ⚔️</button>
@@ -270,9 +273,11 @@ html,body {
   <div class="dlg-hdr">── 패권 선언 ──</div>
   <div class="dlg-fullscreen-body">
     <div class="dlg-side-char" id="dc-L">
+      <img src="" id="dlg-img-L" class="dlg-img" alt="군주 초상화">
       <div class="dlg-side-bubble" id="dlg-bbl-L"></div>
     </div>
     <div class="dlg-side-char" id="dc-R">
+      <img src="" id="dlg-img-R" class="dlg-img" alt="군주 초상화">
       <div class="dlg-side-bubble" id="dlg-bbl-R"></div>
     </div>
   </div>
@@ -284,7 +289,7 @@ html,body {
 <!-- 게임 본 화면 -->
 <div id="s-game" class="screen">
   <div class="g-header">
-    <div class="g-title">⚔️ 삼국 영토 쟁탈 격전판</div>
+    <div class="g-title">⚔️ 삼국 영토 쟁탈 격전판 (ver 9.88)</div>
     <div class="g-scorebar">
       <div class="g-slbls">
         <span id="gl-L"></span>
@@ -301,6 +306,7 @@ html,body {
   
   <div class="g-main-wrapper">
     <div class="g-side-profile" id="g-prof-L">
+      <img src="" id="g-prof-img-L" class="g-prof-img" alt="초상화">
       <div class="g-profile-name" id="g-prof-name-L"></div>
       <div class="g-profile-skill" id="g-prof-skill-L"></div>
     </div>
@@ -310,6 +316,7 @@ html,body {
     </div>
 
     <div class="g-side-profile" id="g-prof-R">
+      <img src="" id="g-prof-img-R" class="g-prof-img" alt="초상화">
       <div class="g-profile-name" id="g-prof-name-R"></div>
       <div class="g-profile-skill" id="g-prof-skill-R"></div>
     </div>
@@ -333,9 +340,9 @@ html,body {
 
 <script>
 const KD = {
-  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', desc:'기사의 강습 (3턴마다 대각선 빈 영지 활성화)', color:'#6b1414', accent:'#e74c3c' },
-  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', desc:'해상 담로 개척 (15% 확률 원격 도약지 활성화)', color:'#145c2a', accent:'#2ecc71' },
-  silla:   { id:'silla',    name:'신라',   king:'박혁거세', desc:'화랑의 풍월도 (접경한 적 세력의 돌 직접 강탈 활성화)', color:'#1a3a8a', accent:'#60a5fa' },
+  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽', img:'주몽.png', desc:'기사의 강습 (3턴마다 대각선 빈 영지 활성화)', color:'#6b1414', accent:'#e74c3c' },
+  baekje:  { id:'baekje',   name:'백제',   king:'온조왕', img:'온조왕.png', desc:'해상 담로 개척 (15% 확률 원격 도약지 활성화)', color:'#145c2a', accent:'#2ecc71' },
+  silla:   { id:'silla',    name:'신라',   king:'박혁거세', img:'박혁거세.png', desc:'정예 화랑 출격 (10의 배수 턴에만 접경 적 돌 강탈 활성화)', color:'#1a3a8a', accent:'#60a5fa' },
 };
 
 const SCRIPTS = {
@@ -405,6 +412,11 @@ function confirmSel(){
   k1=KD[sel[0]]; k2=KD[sel[1]];
   const key=[...sel].sort().join('-');
   script=SCRIPTS[key]||[]; si=0;
+  
+  // 대화창에 이미지 패스 할당
+  document.getElementById('dlg-img-L').src = k1.img;
+  document.getElementById('dlg-img-R').src = k2.img;
+  
   renderDlg();
   show('s-dlg');
 }
@@ -442,12 +454,16 @@ function initGame(){
     }
   }
 
-  // 초기 성틀 배치
+  // 초기 기지 배치
   grid[0][0]=k1.id; grid[0][1]=k1.id; grid[1][0]=k1.id;
   grid[G-1][G-1]=k2.id; grid[G-1][G-2]=k2.id; grid[G-2][G-1]=k2.id;
   
+  // 게임판 프로필 이미지 및 텍스트 매칭
+  document.getElementById('g-prof-img-L').src = k1.img;
   document.getElementById('g-prof-name-L').innerHTML = `<span style="color:${k1.accent}">${k1.name}</span><br>${k1.king}`;
   document.getElementById('g-prof-skill-L').textContent = k1.desc;
+  
+  document.getElementById('g-prof-img-R').src = k2.img;
   document.getElementById('g-prof-name-R').innerHTML = `<span style="color:${k2.accent}">${k2.name}</span><br>${k2.king}`;
   document.getElementById('g-prof-skill-R').textContent = k2.desc;
 
@@ -456,7 +472,7 @@ function initGame(){
   drawUI();
 }
 
-/* 🎯 [완벽 수정된 핵심 엔진] 선택 가능한 돌(타일)의 독립적 활성화 연산 장치 */
+/* 🎯 10의 배수 턴 제한이 걸린 밸런싱 하이라이트 연산 엔진 */
 function calculateHighlights(kid){
   const validHi = new Set();
   const oppKid = (kid === k1.id ? k2.id : k1.id);
@@ -477,7 +493,7 @@ function calculateHighlights(kid){
     }
   }
 
-  // 특성 1. 고구려: 3의 배수 정벌 턴일 때 대각선 방향 빈칸 강제 추가 활성화
+  // 특성 1. 고구려: 3의 배수 정벌 턴일 때 대각선 방향 빈칸 추가 활성화
   if(kid === 'goguryeo' && (totalTurns % 3 === 0)) {
     for(let r=0; r<G; r++) {
       for(let c=0; c<G; c++) {
@@ -513,28 +529,28 @@ function calculateHighlights(kid){
     if(passiveTriggered) passiveMsg = "⚡ 백제 특성 발동: 해상 담로 개척! 원격 기지 돌이 활성화되었습니다.";
   }
 
-  // 특성 3. 신라: 아군 영토와 접경한 '적 세력의 돌'을 공격 타겟으로 직접 활성화
-  if(kid === 'silla') {
+  // 특성 3. 신라: 오직 10의 배수 턴에만 접경한 적 돌을 강탈용으로 활성화
+  if(kid === 'silla' && (totalTurns % 10 === 0)) {
     for(let r=0; r<G; r++) {
       for(let c=0; c<G; c++) {
         if(grid[r][c] === 'silla') {
           DIRS.forEach(([dr,dc]) => {
             const nr = r + dr, nc = c + dc;
             if(nr >= 0 && nr < G && nc >= 0 && nc < G && grid[nr][nc] === oppKid) {
-              validHi.add(`${nr},${nc}`); // 적 영토 좌표 주입
+              validHi.add(`${nr},${nc}`); 
               passiveTriggered = true;
             }
           });
         }
       }
     }
-    if(passiveTriggered) passiveMsg = "⚡ 신라 특성 발동: 화랑의 풍월도! 강탈 가능한 적의 돌이 붉게 활성화되었습니다.";
+    if(passiveTriggered) passiveMsg = "⚡ 신라 궁극 특성 발동: 정예 화랑 출격! 접경한 적의 돌을 빼앗을 수 있습니다!";
   }
 
   // 상단 안내 힌트 갱신
   const hintEl = document.getElementById('g-hint-text');
   if(passiveTriggered && passiveMsg !== "") {
-    hintEl.innerHTML = `<span style="color:#ff5555;">${passiveMsg}</span>`;
+    hintEl.innerHTML = `<span style="color:#ffeb3b;">${passiveMsg}</span>`;
   } else {
     hintEl.textContent = "빛나는 타일(선택 가능한 돌)을 클릭하여 영토를 전개하십시오.";
   }
@@ -544,7 +560,6 @@ function calculateHighlights(kid){
 
 function cntCells(kid){ return grid.flat().filter(x=>x===kid).length; }
 
-/* 🎯 [완벽 수정] 계산된 하이라이트(`hi`) 데이터를 기반으로 렌더링 및 클릭 바인딩 */
 function drawGrid(){
   const el=document.getElementById('g-grid');
   el.style.gridTemplateColumns=`repeat(${G}, min(5.5vh, 5.5vw))`;
@@ -562,19 +577,16 @@ function drawGrid(){
         d.style.cssText='background:#1b1510; display:flex; align-items:center; justify-content:center; color:#887766; font-size:14px;';
         d.textContent = '⛰️';
       } else if(kid) {
-        // 이미 주인이 있는 돌인 경우
         const kd=KD[kid];
         d.style.cssText=`background:${kd.color}; border:2px solid ${kd.accent};`;
         
-        // 🌟 [신라 전용 보정] 선택 가능한 돌(isHi)이면서 적의 돌(oppKid)인 경우 -> 강탈 타겟팅 활성화
+        // 신라 전용 10턴 주기 강탈 타겟 이펙트 처리
         if(isHi && kid === oppKid) {
           d.classList.add('hi', 'steal-target');
           d.onclick=()=>claimCell(r,c);
         }
       } else {
-        // 주인이 없는 빈칸인 경우
         if(isHi) {
-          // 🌟 선택 가능 돌 활성화 (일반/고구려대각/백제원격 포함)
           d.classList.add('hi');
           d.style.cssText=`background:${cur.color}aa; border:2px solid #ffffff;`;
           d.onclick=()=>claimCell(r,c);
@@ -601,7 +613,7 @@ function drawUI(){
   document.getElementById('gf-R').style.width=(c2/tot*100)+'%'; document.getElementById('gf-R').style.background=k2.accent;
   
   const ti=document.getElementById('g-turn');
-  ti.innerHTML=`[제 ${totalTurns}선택] <strong>${cur.king} (명령조)</strong> 차례`;
+  ti.innerHTML=`[제 ${totalTurns}선택] <strong>${cur.king}</strong> 차례`;
   ti.style.cssText=`color:#fff; background:${cur.color}; border:2px solid ${cur.accent};`;
 
   document.getElementById('g-prof-L').classList.toggle('active-turn', turn===0);
@@ -612,18 +624,15 @@ function claimCell(r,c){
   if(autoInterval === null) btnSfx();
   const curKid = (turn === 0 ? k1.id : k2.id);
   
-  // 땅 점령 대입 (신라의 경우 적의 돌 자리를 자신의 색으로 교체 유도)
   grid[r][c] = curKid;
   totalTurns++;
 
-  // 빈 공간 체크
   const freeSpaces = grid.flat().filter(x => x === null).length;
   if(freeSpaces === 0){
     if(autoInterval) { clearInterval(autoInterval); autoInterval = null; }
     showVictory(); return; 
   }
 
-  // 턴 교대 핸들링
   const nextTurn = 1 - turn;
   const nextKing = nextTurn === 0 ? k1 : k2;
   let nextHi = calculateHighlights(nextKing.id);
@@ -632,7 +641,6 @@ function claimCell(r,c){
     turn = nextTurn;
     hi = nextHi;
   } else {
-    // 상대방이 둘 곳이 없다면 내가 연속 기회를 가짐
     const currentKing = turn === 0 ? k1 : k2;
     const retryHi = calculateHighlights(currentKing.id);
     if(retryHi.size === 0) {
