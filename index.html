@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>삼국지 땅따먹기</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:100%; height:100%; overflow:hidden; background:#000; font-family:'Georgia',serif; }
+
+.screen { position:absolute; inset:0; display:none; }
+.screen.active { display:flex; }
+
+/* ── 타이틀 ── */
+#s-title {
+  background:url('image/초기화면.png') center/cover no-repeat;
+  flex-direction:column; align-items:center; justify-content:flex-end;
+  padding-bottom:8%;
+}
+.t-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
+.t-btn {
+  width:230px; padding:14px 0; font-size:20px; font-family:'Georgia',serif;
+  font-weight:bold; color:#d4af37; text-align:center; cursor:pointer;
+  background:rgba(8,4,0,0.78); border:2px solid #d4af37; border-radius:4px;
+  letter-spacing:3px; transition:all 0.2s;
+}
+.t-btn:hover { background:rgba(212,175,55,0.2); transform:scale(1.04); }
+.t-btn.red  { color:#ff7777; border-color:#cc4444; }
+.t-btn.red:hover { background:rgba(200,60,60,0.2); }
+.t-row { display:flex; gap:14px; }
+.t-row .t-btn { width:140px; font-size:15px; padding:10px 0; letter-spacing:2px; }
+
+/* ── 선택 ── */
+#s-sel {
+  flex-direction:column; align-items:center;
+  background:linear-gradient(160deg,#060300,#130d00);
+}
+.sel-banner { width:100%; max-height:48%; object-fit:cover; object-position:top center; }
+.sel-bottom {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:14px; padding:10px 16px;
+}
+.sel-title { color:#d4af37; font-size:17px; letter-spacing:2px; }
+.k-row { display:flex; gap:18px; }
+.k-card {
+  width:115px; border-radius:8px; overflow:hidden; cursor:pointer;
+  border:2px solid rgba(255,255,255,0.12); transition:all 0.25s;
+  background:rgba(255,255,255,0.04);
+}
+.k-card img { width:100%; height:135px; object-fit:cover; display:block; }
+.k-card .kn {
+  color:rgba(255,255,255,0.8); text-align:center;
+  font-size:11px; padding:6px 4px; background:rgba(0,0,0,0.55);
+}
+.k-card.on { border-color:#d4af37; box-shadow:0 0 18px rgba(212,175,55,0.55); }
+.k-card.off { opacity:0.25; cursor:not-allowed; }
+.sel-btn {
+  padding:11px 38px; font-size:16px; border-radius:6px; border:none;
+  font-family:'Georgia',serif; font-weight:bold; cursor:pointer;
+  background:linear-gradient(135deg,#d4af37,#b8960c); color:#1a0800;
+  transition:transform 0.15s;
+}
+.sel-btn:hover:not(:disabled) { transform:scale(1.05); }
+.sel-btn:disabled { background:#2a2a2a; color:#555; cursor:not-allowed; }
+
+/* ── 대화 ── */
+#s-dlg {
+  background:linear-gradient(160deg,#050200,#110c00);
+  flex-direction:column; align-items:center; padding:16px 12px 14px; gap:0;
+}
+.dlg-hdr { color:rgba(212,175,55,0.5); font-size:12px; letter-spacing:5px; margin-bottom:14px; }
+.dlg-body { flex:1; width:100%; max-width:720px; display:flex; gap:10px; align-items:flex-start; }
+.dlg-char {
+  width:155px; flex-shrink:0; text-align:center;
+  transition:all 0.35s; opacity:0.35; transform:scale(0.92);
+}
+.dlg-char img {
+  width:148px; height:185px; object-fit:cover; border-radius:8px;
+  border:3px solid transparent; transition:border-color 0.35s, box-shadow 0.35s;
+}
+.dlg-char .dcn { font-size:11px; font-weight:bold; margin-top:5px; transition:color 0.3s; }
+.dlg-char.act { opacity:1; transform:scale(1.04); }
+.dlg-char.act img { border-color:#d4af37; box-shadow:0 0 18px rgba(212,175,55,0.5); }
+.dlg-mid {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding-top:20px; gap:10px;
+}
+.dlg-bubble {
+  width:100%; background:rgba(255,255,255,0.05);
+  border:1px solid rgba(212,175,55,0.28); border-radius:12px;
+  padding:16px 14px; text-align:center; min-height:90px;
+  color:rgba(255,255,255,0.88); font-size:14px; line-height:1.8;
+  transition:border-color 0.3s;
+}
+.dlg-dots { display:flex; gap:6px; }
+.dlg-dots span {
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(255,255,255,0.16); transition:background 0.3s;
+}
+.dlg-dots span.done { background:#d4af37; }
+.dlg-foot { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:12px; }
+.dlg-next {
+  padding:10px 30px; font-size:15px; border-radius:7px; border:none;
+  font-family:'Georgia',serif; font-weight:bold; cursor:pointer;
+  background:linear-gradient(135deg,#d4af37,#b8960c); color:#1a0800;
+}
+
+/* ── 게임 ── */
+#s-game {
+  background:linear-gradient(160deg,#0a0600,#1a1000);
+  flex-direction:column; align-items:center; justify-content:center;
+  gap:8px; padding:10px;
+}
+.g-title { color:#d4af37; font-size:16px; font-weight:bold; }
+.g-scorebar { width:100%; max-width:420px; }
+.g-slbls { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+.g-track { height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; position:relative; }
+.g-fill  { position:absolute; top:0; height:100%; transition:width 0.3s; }
+.g-turn  { padding:5px 16px; border-radius:14px; font-size:12px; font-weight:bold; }
+#g-grid  {
+  display:grid; gap:2px; padding:8px;
+  background:rgba(0,0,0,0.65); border-radius:8px;
+  border:1px solid rgba(212,175,55,0.12);
+}
+.cell { width:34px; height:34px; border-radius:3px; transition:background 0.12s; }
+.cell.hi { cursor:pointer; }
+.g-hint { color:rgba(255,255,255,0.2); font-size:10px; }
+.g-end {
+  padding:6px 18px; font-size:11px; background:transparent;
+  border:1px solid rgba(212,175,55,0.22); color:rgba(212,175,55,0.45);
+  border-radius:6px; cursor:pointer; font-family:'Georgia',serif;
+}
+
+/* ── 승리 ── */
+#s-win {
+  background:radial-gradient(ellipse at 50% 30%, #1c1200, #060300);
+  flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; padding:20px;
+}
+.w-trophy { font-size:52px; animation:popIn 0.6s ease both; }
+.w-title  { font-size:28px; font-weight:bold; animation:popIn 0.8s 0.1s ease both; text-shadow:0 0 24px currentColor; }
+.w-img    {
+  width:200px; height:242px; object-fit:cover; border-radius:10px;
+  border:3px solid #d4af37; box-shadow:0 0 32px rgba(212,175,55,0.55);
+  animation:popIn 1s 0.2s ease both;
+}
+.w-speech {
+  color:rgba(255,255,255,0.82); font-size:15px; text-align:center;
+  max-width:370px; line-height:1.8; font-style:italic; min-height:48px;
+}
+.w-scores { display:flex; gap:38px; }
+.w-sc { text-align:center; }
+.reset-btn {
+  padding:11px 30px; font-size:15px; border-radius:8px; border:none;
+  font-family:'Georgia',serif; font-weight:bold; cursor:pointer;
+  background:linear-gradient(135deg,#d4af37,#b8960c); color:#1a0800;
+}
+
+@keyframes popIn {
+  from { transform:scale(0.3); opacity:0; }
+  to   { transform:scale(1);   opacity:1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ①  타이틀 -->
+<div id="s-title" class="screen active">
+  <div class="t-wrap">
+    <button class="t-btn" onclick="btnSfx();goSelect()">START GAME</button>
+    <div class="t-row">
+      <button class="t-btn" onclick="btnSfx()">OPTIONS</button>
+      <button class="t-btn" onclick="btnSfx()">STORY MODE</button>
+    </div>
+    <button class="t-btn red" onclick="btnSfx();exitGame()">EXIT</button>
+  </div>
+</div>
+
+<!-- ②  나라 선택 -->
+<div id="s-sel" class="screen">
+  <img class="sel-banner" src="세 왕.png" alt="세 왕">
+  <div class="sel-bottom">
+    <div class="sel-title">⚔️ 두 나라를 선택하세요</div>
+    <div class="k-row">
+      <div class="k-card" id="kc-goguryeo" onclick="toggleK('goguryeo')">
+        <img src="주몽.png" alt="주몽">
+        <div class="kn">고구려 · 주몽</div>
+      </div>
+      <div class="k-card" id="kc-baekje" onclick="toggleK('baekje')">
+        <img src="온조왕.png" alt="온조왕">
+        <div class="kn">백제 · 온조왕</div>
+      </div>
+      <div class="k-card" id="kc-silla" onclick="toggleK('silla')">
+        <img src="박혁거세.png" alt="박혁거세">
+        <div class="kn">신라 · 박혁거세</div>
+      </div>
+    </div>
+    <button class="sel-btn" id="sel-ok" disabled onclick="btnSfx();confirmSel()">대결 시작! ⚔️</button>
+  </div>
+</div>
+
+<!-- ③  대화 -->
+<div id="s-dlg" class="screen">
+  <div class="dlg-hdr">── 왕들의 만남 ──</div>
+  <div class="dlg-body">
+    <div class="dlg-char" id="dc-L">
+      <img id="dc-L-img" src="" alt="">
+      <div class="dcn" id="dc-L-nm"></div>
+    </div>
+    <div class="dlg-mid">
+      <div class="dlg-bubble" id="dlg-bbl"></div>
+      <div class="dlg-dots"   id="dlg-dots"></div>
+    </div>
+    <div class="dlg-char" id="dc-R">
+      <img id="dc-R-img" src="" alt="">
+      <div class="dcn" id="dc-R-nm"></div>
+    </div>
+  </div>
+  <div class="dlg-foot">
+    <button class="dlg-next" id="dlg-nxt" onclick="btnSfx();advDlg()">다음 ▶</button>
+  </div>
+</div>
+
+<!-- ④  게임 -->
+<div id="s-game" class="screen">
+  <div class="g-title">⚔️ 삼국 땅따먹기</div>
+  <div class="g-scorebar">
+    <div class="g-slbls">
+      <span id="gl-L"></span>
+      <span id="gl-P" style="color:rgba(255,255,255,0.28);font-size:10px"></span>
+      <span id="gl-R"></span>
+    </div>
+    <div class="g-track">
+      <div class="g-fill" id="gf-L" style="left:0"></div>
+      <div class="g-fill" id="gf-R" style="right:0"></div>
+    </div>
+  </div>
+  <div class="g-turn" id="g-turn"></div>
+  <div id="g-grid"></div>
+  <div class="g-hint">빛나는 칸을 눌러 영토를 확장하세요</div>
+  <button class="g-end" onclick="btnSfx();endEarly()">게임 종료 (현재 점수로)</button>
+</div>
+
+<!-- ⑤  승리 -->
+<div id="s-win" class="screen">
+  <div class="w-trophy" id="w-trophy">🏆</div>
+  <div class="w-title"  id="w-title"></div>
+  <img  class="w-img"   id="w-img" src="" alt="">
+  <div  class="w-speech" id="w-speech"></div>
+  <div  class="w-scores" id="w-scores"></div>
+  <button class="reset-btn" onclick="btnSfx();resetAll()">다시 하기</button>
+</div>
+
+<!-- 오디오 (HTML 파일을 D:\VibeDevs\Three-country\ 에 저장하면 상대경로로 작동) -->
+<audio id="aud-bgm" src="audio/배경음악.mp3" loop preload="auto"></audio>
+<audio id="aud-win" src="audio/승리.mp3"     preload="auto"></audio>
+
+<script>
+/* ═══════════ 데이터 ═══════════ */
+const KD = {
+  goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽',
+    img:'주몽.png', color:'#6b1414', accent:'#e74c3c',
+    wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
+          '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'] },
+  baekje:  { id:'baekje',   name:'백제',   king:'온조왕',
+    img:'온조왕.png', color:'#145c2a', accent:'#2ecc71',
+    wins:['백제의 위대함이 오늘 다시 한번 증명되었도다!',
+          '한강의 물처럼, 백제의 영토는 끝없이 넓어지리라!'] },
+  silla:   { id:'silla',    name:'신라',   king:'박혁거세',
+    img:'박혁거세.png', color:'#1a3a8a', accent:'#60a5fa',
+    wins:['하늘의 뜻이 이미 정해져 있었노라. 신라의 빛이 온 땅을 밝히리라!',
+          '나는 알에서 태어났으되, 이 땅의 진정한 왕으로 우뚝 서리라!'] },
+};
+
+const SCRIPTS = {
+  'baekje-goguryeo':[
+    {k:'goguryeo', t:'내 아들아! 백제를 세운 것은 장하나, 고구려의 땅을 넘보지 마라!'},
+    {k:'baekje',   t:'아버지... 아니, 이제 우리는 각자의 왕입니다. 누가 더 강한지 보여드리죠!'},
+    {k:'goguryeo', t:'기개는 가상하다. 허나 나의 활 솜씨를 당할 수 있겠느냐?'},
+    {k:'baekje',   t:'활보다는 전략입니다! 백제의 영토가 더 넓어질 것입니다!'},
+    {k:'goguryeo', t:'두고 보거라! 고구려의 영웅이 가만히 있을 것 같으냐!'},
+    {k:'baekje',   t:'시작해봅시다. 더 넓은 땅을 차지하는 자가 진정한 왕입니다!'},
+  ],
+  'goguryeo-silla':[
+    {k:'goguryeo', t:'알에서 태어났다는 왕이 바로 너냐? 신비롭기는 하나…'},
+    {k:'silla',    t:'나 박혁거세는 하늘이 내린 왕! 고구려의 용맹함도 신라를 이기지 못하리!'},
+    {k:'goguryeo', t:'흥! 말만 번지르르하구나. 내 화살이 이 땅을 정복하리라!'},
+    {k:'silla',    t:'황금알의 기운이 이 땅을 지킬 것이오. 어디 해보시오!'},
+    {k:'goguryeo', t:'어디 한번 해보자! 고구려의 강인함을 보여주마!'},
+    {k:'silla',    t:'좋습니다! 땅따먹기로 승부를 가립시다!'},
+  ],
+  'baekje-silla':[
+    {k:'baekje', t:'박혁거세, 신라는 아직 작은 나라. 이 비옥한 땅을 내게 양보하시오.'},
+    {k:'silla',  t:'온조왕, 감히! 하늘이 내린 신라의 영토를 누가 넘보겠소!'},
+    {k:'baekje', t:'한강의 힘이 얼마나 대단한지 보여주겠소!'},
+    {k:'silla',  t:'황금알의 기운이 신라를 지킬 것이오!'},
+    {k:'baekje', t:'더 많은 땅을 차지하는 자가 이 시대의 주인공이 되리라!'},
+    {k:'silla',  t:'받아들이겠소. 신라의 승리를 두 눈으로 확인하시오!'},
+  ],
+};
+
+/* ═══════════ 상태 ═══════════ */
+const G=10, DIRS=[[-1,0],[1,0],[0,-1],[0,1]];
+let sel=[], k1=null, k2=null, script=[], si=0;
+let grid=[], turn=0, hi=new Set();
+
+const bgm    = document.getElementById('aud-bgm');
+const winAud = document.getElementById('aud-win');
+
+/* ═══════════ 효과음 (띵동) ═══════════ */
+function btnSfx(){
+  try {
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    [[880,0,0.28],[660,0.14,0.48]].forEach(([hz,st,end])=>{
+      const o=ac.createOscillator(), g=ac.createGain();
+      o.connect(g); g.connect(ac.destination);
+      o.frequency.value=hz; o.type='sine';
+      g.gain.setValueAtTime(st===0?0.28:0, ac.currentTime);
+      if(st>0) g.gain.setValueAtTime(0.28, ac.currentTime+st);
+      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+end);
+      o.start(ac.currentTime+st); o.stop(ac.currentTime+end);
+    });
+  } catch(e){}
+}
+
+/* ═══════════ 화면 전환 ═══════════ */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ═══════════ 타이틀 ═══════════ */
+function goSelect(){
+  sel=[];
+  bgm.play().catch(()=>{});
+  document.querySelectorAll('.k-card').forEach(c=>c.classList.remove('on','off'));
+  document.getElementById('sel-ok').disabled=true;
+  show('s-sel');
+}
+
+function exitGame(){
+  if(confirm('게임을 종료하시겠습니까?')){
+    bgm.pause();
+    try{ window.close(); }catch(e){}
+    document.body.innerHTML='<p style="color:#d4af37;text-align:center;margin-top:45vh;font-family:Georgia;font-size:18px">게임을 종료합니다.<br>창을 닫아주세요.</p>';
+  }
+}
+
+/* ═══════════ 나라 선택 ═══════════ */
+function toggleK(id){
+  btnSfx();
+  const card=document.getElementById('kc-'+id);
+  if(card.classList.contains('off')) return;
+  if(sel.includes(id)){ sel=sel.filter(x=>x!==id); card.classList.remove('on'); }
+  else if(sel.length<2){ sel.push(id); card.classList.add('on'); }
+  document.querySelectorAll('.k-card').forEach(c=>{
+    const cid=c.id.replace('kc-','');
+    c.classList.toggle('off', sel.length>=2 && !sel.includes(cid));
+  });
+  document.getElementById('sel-ok').disabled=sel.length<2;
+}
+
+function confirmSel(){
+  k1=KD[sel[0]]; k2=KD[sel[1]];
+  const key=[...sel].sort().join('-');
+  script=SCRIPTS[key]||[]; si=0;
+
+  document.getElementById('dc-L-img').src = k1.img;
+  document.getElementById('dc-L-nm').textContent  = k1.king+' ('+k1.name+')';
+  document.getElementById('dc-L-nm').style.color   = k1.accent;
+  document.getElementById('dc-R-img').src = k2.img;
+  document.getElementById('dc-R-nm').textContent  = k2.king+' ('+k2.name+')';
+  document.getElementById('dc-R-nm').style.color   = k2.accent;
+  document.getElementById('dlg-dots').innerHTML = script.map(()=>'<span></span>').join('');
+  renderDlg();
+  show('s-dlg');
+}
+
+/* ═══════════ 대화 ═══════════ */
+function renderDlg(){
+  const ln=script[si];
+  const isL=(ln.k===sel[0]);
+  const spk=isL?k1:k2;
+  document.getElementById('dc-L').classList.toggle('act', isL);
+  document.getElementById('dc-R').classList.toggle('act', !isL);
+  document.getElementById('dlg-bbl').innerHTML=
+    `<span style="color:${spk.accent};font-size:11px;font-weight:bold;display:block;margin-bottom:6px">`+
+    `${spk.king} (${spk.name})</span>"${ln.t}"`;
+  const dots=document.getElementById('dlg-dots').children;
+  for(let i=0;i<dots.length;i++) dots[i].classList.toggle('done',i<=si);
+  document.getElementById('dlg-nxt').textContent=si>=script.length-1?'전투 시작! ⚔️':'다음 ▶';
+}
+
+function advDlg(){
+  if(si<script.length-1){ si++; renderDlg(); }
+  else { initGame(); show('s-game'); }
+}
+
+/* ═══════════ 게임 초기화 ═══════════ */
+function initGame(){
+  grid=Array(G).fill(null).map(()=>Array(G).fill(null));
+  [[0,0],[0,1],[1,0],[1,1]].forEach(([r,c])=>grid[r][c]=k1.id);
+  [[G-2,G-2],[G-2,G-1],[G-1,G-2],[G-1,G-1]].forEach(([r,c])=>grid[r][c]=k2.id);
+  turn=0; hi=adjEmp(k1.id); drawGrid(); drawUI();
+}
+
+function adjEmp(kid){
+  const s=new Set();
+  for(let r=0;r<G;r++) for(let c=0;c<G;c++){
+    if(grid[r][c]===kid) DIRS.forEach(([dr,dc])=>{
+      const nr=r+dr,nc=c+dc;
+      if(nr>=0&&nr<G&&nc>=0&&nc<G&&grid[nr][nc]===null) s.add(`${nr},${nc}`);
+    });
+  }
+  return s;
+}
+
+function cntCells(kid){ return grid.flat().filter(x=>x===kid).length; }
+
+/* ═══════════ 게임 렌더 ═══════════ */
+function drawGrid(){
+  const el=document.getElementById('g-grid');
+  el.style.gridTemplateColumns=`repeat(${G},34px)`;
+  el.innerHTML='';
+  const cur=turn===0?k1:k2;
+  for(let r=0;r<G;r++) for(let c=0;c<G;c++){
+    const d=document.createElement('div');
+    d.className='cell';
+    const key=`${r},${c}`, kid=grid[r][c], isHi=hi.has(key);
+    if(kid){
+      const kd=KD[kid];
+      d.style.cssText=`background:${kd.color};border:1px solid ${kd.accent}28`;
+    } else if(isHi){
+      d.classList.add('hi');
+      d.style.cssText=`background:${cur.color}40;border:2px solid ${cur.accent};`+
+        `box-shadow:inset 0 0 8px ${cur.accent}50`;
+      d.onclick=()=>claimCell(r,c);
+    } else {
+      d.style.cssText='background:#0e0900;border:1px solid rgba(255,255,255,0.04)';
+    }
+    el.appendChild(d);
+  }
+}
+
+function drawUI(){
+  const cur=turn===0?k1:k2;
+  const c1=cntCells(k1.id), c2=cntCells(k2.id), tot=G*G;
+  const lbl=(el,k,n)=>{ const e=document.getElementById(el);
+    e.textContent=(k===k1?k.name+' '+n+'칸':n+'칸 '+k.name);
+    e.style.color=k.accent; e.style.fontWeight='bold'; };
+  lbl('gl-L',k1,c1); lbl('gl-R',k2,c2);
+  document.getElementById('gl-P').textContent=Math.round((c1+c2)/tot*100)+'% 점령';
+  const fl=document.getElementById('gf-L'), fr=document.getElementById('gf-R');
+  fl.style.width=c1/tot*100+'%'; fl.style.background=`linear-gradient(90deg,${k1.color},${k1.accent})`;
+  fr.style.width=c2/tot*100+'%'; fr.style.background=`linear-gradient(90deg,${k2.accent},${k2.color})`;
+  const ti=document.getElementById('g-turn');
+  ti.textContent=cur.king+'의 차례';
+  ti.style.cssText=`color:${cur.accent};background:${cur.color}55;`+
+    `border:1px solid ${cur.accent}88;padding:5px 16px;border-radius:14px;font-size:12px;font-weight:bold`;
+}
+
+/* ═══════════ 칸 점령 ═══════════ */
+function claimCell(r,c){
+  btnSfx();
+  if(!hi.has(`${r},${c}`)) return;
+  const cur=turn===0?k1:k2;
+  grid[r][c]=cur.id;
+  if(grid.flat().filter(Boolean).length===G*G){ drawGrid(); drawUI(); showVictory(); return; }
+  const nt=1-turn, nk=nt===0?k1:k2;
+  const nadj=adjEmp(nk.id);
+  if(nadj.size>0){ turn=nt; hi=nadj; }
+  else {
+    const cadj=adjEmp(cur.id);
+    if(cadj.size===0){ drawGrid(); drawUI(); showVictory(); return; }
+    hi=cadj;
+  }
+  drawGrid(); drawUI();
+}
+
+function endEarly(){
+  if(confirm('현재 점수로 게임을 종료하시겠습니까?')) showVictory();
+}
+
+/* ═══════════ 승리 화면 ═══════════ */
+function showVictory(){
+  const c1=cntCells(k1.id), c2=cntCells(k2.id);
+  const winner=c1>c2?k1:c2>c1?k2:null;
+  bgm.pause();
+  winAud.currentTime=0; winAud.play().catch(()=>{});
+
+  document.getElementById('w-trophy').textContent = winner?'🏆':'🤝';
+  const wt=document.getElementById('w-title');
+  wt.textContent = winner ? winner.name+' 승리!' : '무승부!';
+  wt.style.color  = winner ? winner.accent : '#d4af37';
+  document.getElementById('w-img').src = winner ? winner.img : k1.img;
+
+  const speech = winner
+    ? winner.wins[Math.floor(Math.random()*winner.wins.length)]
+    : '두 나라 모두 대단하도다! 진정한 영웅들이로다!';
+  typeWriter('w-speech','"'+speech+'"',45);
+
+  document.getElementById('w-scores').innerHTML=`
+    <div class="w-sc">
+      <div style="font-size:17px;color:${k1.accent}">${k1.name}</div>
+      <div style="color:${k1.accent};font-size:32px;font-weight:bold">${c1}</div>
+      <div style="color:rgba(255,255,255,0.4);font-size:11px">칸</div>
+    </div>
+    <div style="color:rgba(255,255,255,0.25);align-self:center;font-size:24px">:</div>
+    <div class="w-sc">
+      <div style="font-size:17px;color:${k2.accent}">${k2.name}</div>
+      <div style="color:${k2.accent};font-size:32px;font-weight:bold">${c2}</div>
+      <div style="color:rgba(255,255,255,0.4);font-size:11px">칸</div>
+    </div>`;
+  show('s-win');
+}
+
+function typeWriter(id,txt,ms){
+  const el=document.getElementById(id); el.textContent=''; let i=0;
+  const iv=setInterval(()=>{ el.textContent+=txt[i++]; if(i>=txt.length) clearInterval(iv); },ms);
+}
+
+function resetAll(){
+  winAud.pause(); winAud.currentTime=0;
+  bgm.play().catch(()=>{});
+  show('s-title');
+}
+
+// 첫 클릭에 BGM 재생 허용
+document.addEventListener('click', ()=>{ if(bgm.paused) bgm.play().catch(()=>{}); }, {once:true});
+</script>
+</body>
+</html>
