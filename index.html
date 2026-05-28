@@ -177,20 +177,20 @@ html,body { width:100%; height:100%; overflow:hidden; background:#000; font-fami
 
 <!-- ②  나라 선택 -->
 <div id="s-sel" class="screen">
-  <img class="sel-banner" src="세 왕.png" alt="세 왕">
+  <img class="sel-banner" src="image/세 왕.png" alt="세 왕">
   <div class="sel-bottom">
     <div class="sel-title">⚔️ 두 나라를 선택하세요</div>
     <div class="k-row">
       <div class="k-card" id="kc-goguryeo" onclick="toggleK('goguryeo')">
-        <img src="주몽.png" alt="주몽">
+        <img src="image/주몽.png" alt="주몽">
         <div class="kn">고구려 · 주몽</div>
       </div>
       <div class="k-card" id="kc-baekje" onclick="toggleK('baekje')">
-        <img src="온조왕.png" alt="온조왕">
+        <img src="image/온조왕.png" alt="온조왕">
         <div class="kn">백제 · 온조왕</div>
       </div>
       <div class="k-card" id="kc-silla" onclick="toggleK('silla')">
-        <img src="박혁거세.png" alt="박혁거세">
+        <img src="image/박혁거세.png" alt="박혁거세">
         <div class="kn">신라 · 박혁거세</div>
       </div>
     </div>
@@ -258,15 +258,15 @@ html,body { width:100%; height:100%; overflow:hidden; background:#000; font-fami
 /* ═══════════ 데이터 ═══════════ */
 const KD = {
   goguryeo:{ id:'goguryeo', name:'고구려', king:'주몽',
-    img:'주몽.png', color:'#6b1414', accent:'#e74c3c',
+    img:'image/주몽.png', color:'#6b1414', accent:'#e74c3c',
     wins:['이 땅은 이제 고구려의 것이다! 나 주몽의 화살이 닿지 않는 곳이 없노라!',
           '하늘이 나를 왕으로 삼았으니, 이 승리는 당연한 것이다!'] },
   baekje:  { id:'baekje',   name:'백제',   king:'온조왕',
-    img:'온조왕.png', color:'#145c2a', accent:'#2ecc71',
+    img:'image/온조왕.png', color:'#145c2a', accent:'#2ecc71',
     wins:['백제의 위대함이 오늘 다시 한번 증명되었도다!',
           '한강의 물처럼, 백제의 영토는 끝없이 넓어지리라!'] },
   silla:   { id:'silla',    name:'신라',   king:'박혁거세',
-    img:'박혁거세.png', color:'#1a3a8a', accent:'#60a5fa',
+    img:'image/박혁거세.png', color:'#1a3a8a', accent:'#60a5fa',
     wins:['하늘의 뜻이 이미 정해져 있었노라. 신라의 빛이 온 땅을 밝히리라!',
           '나는 알에서 태어났으되, 이 땅의 진정한 왕으로 우뚝 서리라!'] },
 };
@@ -395,7 +395,7 @@ function advDlg(){
   else { initGame(); show('s-game'); }
 }
 
-/* ═══════════ 게임 초기화 ═══════════ */
+/* ═══════════   게임 초기화 ═══════════ */
 function initGame(){
   grid=Array(G).fill(null).map(()=>Array(G).fill(null));
   [[0,0],[0,1],[1,0],[1,1]].forEach(([r,c])=>grid[r][c]=k1.id);
